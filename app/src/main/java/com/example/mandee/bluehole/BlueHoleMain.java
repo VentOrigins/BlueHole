@@ -17,7 +17,8 @@ import java.util.Random;
 
 public class BlueHoleMain extends ActionBarActivity {
     Handler h = new Handler();
-    int delay = 1000; //milliseconds
+    int delay = 5000; //milliseconds
+    int i = 0;
     Random rand = new Random();
 
     @Override
@@ -25,10 +26,7 @@ public class BlueHoleMain extends ActionBarActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_blue_hole_main);
         RelativeLayout rlayout = (RelativeLayout) findViewById(R.id.rlayout);
-        ImageView iv = new ImageView(this);
-        iv.setBackgroundResource(R.drawable.vo);
-        rlayout.addView(iv);
-
+        //Global class game ball which indicates which ball to get
 
         // nextInt is normally exclusive of the top value,
         // so add 1 to make it inclusive
@@ -51,11 +49,14 @@ public class BlueHoleMain extends ActionBarActivity {
 
         h.postDelayed(new Runnable() {
             public void run() {
-                ImageView image = (ImageView) findViewById(R.id.bluehole);
-                int randomNum = rand.nextInt((300 - 1) + 1) + 1;
-                image.setX(randomNum);
-                image.setY(randomNum);
-
+//                ImageView image = (ImageView) findViewById(R.id.bluehole);
+//                int randomNum = rand.nextInt((300 - 1) + 1) + 1;
+//                image.setX(randomNum);
+//                image.setY(randomNum);
+                ImageView testImage = new ImageView(BlueHoleMain.this);
+                RelativeLayout rlayout = (RelativeLayout) findViewById(R.id.rlayout);
+                Ball x = new Ball(10,i,rlayout, testImage);
+                i = i + 10;
 
                 h.postDelayed(this, delay);
             }
