@@ -1,8 +1,10 @@
 package com.example.mandee.bluehole;
 
+import android.graphics.Color;
 import android.os.Handler;
 import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
+import android.util.DisplayMetrics;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.MotionEvent;
@@ -20,34 +22,82 @@ public class Ball {
 
     Handler h = new Handler();
     private long speeds; //milliseconds
+    private int x;
+    private int y;
+    private int dx;
+    private int dy;
     private int numbers;
     private RelativeLayout rlayout;
-    private ImageView testingImage;
+    private ImageView ballImage;
+    public int screenWidth;
+    public int screenHeight;
+
+    private Color ballColor;
 
 
-    public Ball(long speed, int number,RelativeLayout rlayout, ImageView testImage) {
+    public Ball(long speed, int x, int y, int dx, int dy, RelativeLayout rlayout, final ImageView ballImage, int screenWidth, int screenHeight) {
         this.speeds = speed;
-        this.numbers = number;
+        this.x = x;
+        this.y = y;
+        this.dx = dx;
+        this.dy = dy;
         this.rlayout = rlayout;
-        this.testingImage = testImage;
-        testImage.setBackgroundResource(R.drawable.vo);
+        this.ballImage = ballImage;
+        ballImage.setBackgroundResource(R.drawable.vo);
+
+        this.screenWidth = screenWidth;
+        this.screenHeight = screenHeight;
+
+        this.ballColor = BLUE;
 
         LinearLayout.LayoutParams parms = new LinearLayout.LayoutParams(60,60);
-        testImage.setLayoutParams(parms);
-        testImage.requestLayout();
-        testImage.setX(1 + numbers);
-        testImage.setY(-1);
+        ballImage.setLayoutParams(parms);
+        ballImage.requestLayout();
+        ballImage.setX(x);
+        ballImage.setY(-1);
 
-        rlayout.addView(testImage);
+        rlayout.addView(ballImage);
+
+        // Every 10 millseconds, call this
         h.postDelayed(new Runnable() {
             public void run() {
-                System.out.println(numbers);
-                testingImage.setY((testingImage.getY() + 1));
+                if (ballImage.getX() + getDx() < 0.0 || ballImage.getX() + getDx() > getScreenWidth()) {
+                    setDx(-getDx());
+                }
+                if (ballImage.getY() + getDy() < 0.0 || ballImage.getY() + getDy() > getScreenHeight()) {
+                    setDy(-getDy());
+                }
+                ballImage.setX((ballImage.getX() + getDx()));
+                ballImage.setY((ballImage.getY() + getDy()));
+
                 h.postDelayed(this, speeds);
                 //If touches bluehole delete
                 //Gameball next
             }
         }, speeds);
 
+    }
+
+    public int getDx() {
+        return dx;
+    }
+
+    public int getDy() {
+        return dy;
+    }
+
+    public void setDx(int dx) {
+        this.dx = dx;
+    }
+
+    public void setDy(int dy) {
+        this.dy = dy;
+    }
+    public int getScreenWidth() {
+        return screenWidth;
+    }
+
+    public int getScreenHeight() {
+        return screenHeight;
     }
 }

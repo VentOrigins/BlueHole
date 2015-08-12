@@ -3,6 +3,7 @@ package com.example.mandee.bluehole;
 import android.os.Handler;
 import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
+import android.util.DisplayMetrics;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.MotionEvent;
@@ -18,13 +19,27 @@ import java.util.Random;
 public class BlueHoleMain extends ActionBarActivity {
     Handler h = new Handler();
     int delay = 5000; //milliseconds
-    int i = 0;
+    int num = 0;
     Random rand = new Random();
+
+    // The screen size of device
+    int screenWidth = 0;
+    int screenHeight = 0;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_blue_hole_main);
+
+        // Get screen size and stores it into screenWidth and screenHeight
+        DisplayMetrics display = new DisplayMetrics();
+        getWindowManager().getDefaultDisplay().getMetrics(display);
+        screenWidth = display.widthPixels;
+        screenHeight = display.heightPixels;
+
+        System.out.println("Screen width: " + screenWidth);
+        System.out.println("Screen height: " + screenHeight);
+
         RelativeLayout rlayout = (RelativeLayout) findViewById(R.id.rlayout);
         //Global class game ball which indicates which ball to get
 
@@ -32,7 +47,6 @@ public class BlueHoleMain extends ActionBarActivity {
         // so add 1 to make it inclusive
 
         rlayout.setOnTouchListener(new View.OnTouchListener() {
-
             @Override
             public boolean onTouch(View v, MotionEvent event) {
                 ImageView image = (ImageView) findViewById(R.id.bluehole);
@@ -44,28 +58,27 @@ public class BlueHoleMain extends ActionBarActivity {
                 image.setY((int) event.getY());
                 return true;
             }
-
         });
 
+        // Every time 5 seconds, call this
         h.postDelayed(new Runnable() {
             public void run() {
-//                ImageView image = (ImageView) findViewById(R.id.bluehole);
-//                int randomNum = rand.nextInt((300 - 1) + 1) + 1;
-//                image.setX(randomNum);
-//                image.setY(randomNum);
-                ImageView testImage = new ImageView(BlueHoleMain.this);
+                // The argument values for the ball's constructor
+                long ballSpeed = 30;
+                int startingBallPosX = rand.nextInt(screenWidth);
+                int startingBallPosY = 0;
+                System.out.println("The starting x position: " + startingBallPosX);
+                int changeOfBallPosX = rand.nextInt(41) - 20;
+                int changeOfBallPosY = rand.nextInt(21) + 1;
                 RelativeLayout rlayout = (RelativeLayout) findViewById(R.id.rlayout);
-                Ball x = new Ball(10,i,rlayout, testImage);
-                i = i + 10;
+                ImageView ballImage = new ImageView(BlueHoleMain.this);
+
+                Ball x = new Ball(ballSpeed, startingBallPosX, startingBallPosY, changeOfBallPosX, changeOfBallPosY, rlayout,ballImage, screenWidth, screenHeight);
+                num = num + 10;
 
                 h.postDelayed(this, delay);
             }
         }, delay);
-
-
-
-
-
     }
 
     @Override
@@ -74,7 +87,6 @@ public class BlueHoleMain extends ActionBarActivity {
         getMenuInflater().inflate(R.menu.menu_blue_hole_main, menu);
         return true;
     }
-
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
@@ -87,9 +99,6 @@ public class BlueHoleMain extends ActionBarActivity {
         if (id == R.id.action_settings) {
             return true;
         }
-
         return super.onOptionsItemSelected(item);
     }
-
-
 }
