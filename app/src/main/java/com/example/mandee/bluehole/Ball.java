@@ -29,13 +29,16 @@ public class Ball {
     private int numbers;
     private RelativeLayout rlayout;
     private ImageView ballImage;
-    public int screenWidth;
-    public int screenHeight;
+    private ImageView blueHole;
+    public int screenTop;
+    public int screenBottom;
+    public int screenLeft;
+    public int screenRight;
 
     private Color ballColor;
 
 
-    public Ball(long speed, int x, int y, int dx, int dy, RelativeLayout rlayout, final ImageView ballImage, int screenWidth, int screenHeight) {
+    public Ball(long speed, int x, int y, int dx, int dy, final RelativeLayout rlayout, final ImageView blueHole, final ImageView ballImage, int top, int bottom, int left, int right) {
         this.speeds = speed;
         this.x = x;
         this.y = y;
@@ -43,12 +46,15 @@ public class Ball {
         this.dy = dy;
         this.rlayout = rlayout;
         this.ballImage = ballImage;
+        this.blueHole = blueHole;
         ballImage.setBackgroundResource(R.drawable.vo);
 
-        this.screenWidth = screenWidth;
-        this.screenHeight = screenHeight;
+        this.screenTop = top;
+        this.screenBottom = bottom;
+        this.screenLeft = left;
+        this.screenRight = right;
 
-        this.ballColor = BLUE;
+//        this.ballColor = BLUE;
 
         LinearLayout.LayoutParams parms = new LinearLayout.LayoutParams(60,60);
         ballImage.setLayoutParams(parms);
@@ -61,14 +67,24 @@ public class Ball {
         // Every 10 millseconds, call this
         h.postDelayed(new Runnable() {
             public void run() {
-                if (ballImage.getX() + getDx() < 0.0 || ballImage.getX() + getDx() > getScreenWidth()) {
+
+                checkCollision();
+
+                if (ballImage.getX() + getDx() < getLeft() || ballImage.getX() + getDx() + 60 > getRight()) {
                     setDx(-getDx());
                 }
-                if (ballImage.getY() + getDy() < 0.0 || ballImage.getY() + getDy() > getScreenHeight()) {
+
+                if(getDy() < 0 && ballImage.getY() + getDy() < getTop()) {
                     setDy(-getDy());
                 }
+                if(getDy() > 0 && ballImage.getY() + getDy() + 60 > getBottom()) {
+                    setDy(-getDy());
+                }
+
+
                 ballImage.setX((ballImage.getX() + getDx()));
                 ballImage.setY((ballImage.getY() + getDy()));
+                checkCollision();
 
                 h.postDelayed(this, speeds);
                 //If touches bluehole delete
@@ -93,11 +109,52 @@ public class Ball {
     public void setDy(int dy) {
         this.dy = dy;
     }
-    public int getScreenWidth() {
-        return screenWidth;
+
+    public int getTop() {
+        return screenTop;
     }
 
-    public int getScreenHeight() {
-        return screenHeight;
+    public int getBottom() {
+        return screenBottom;
     }
+
+    public int getLeft() {
+        return screenLeft;
+    }
+
+    public int getRight() {
+        return screenRight;
+    }
+
+    public void checkCollision() {
+
+        System.out.println(ballImage.getTop() + " " + blueHole.getTop());
+//        System.out.println(ballImage.getBottom() + " " + blueHole.getBottom());
+//        System.out.println(ballImage.getLeft() + " " + blueHole.getLeft());
+//        System.out.println(ballImage.getRight() + " " + blueHole.getRight());
+        if(ballImage.getLeft() < blueHole.getRight() && ballImage.getLeft() > blueHole.getLeft() && (
+                ballImage.getTop() < blueHole.getTop() && ballImage.getTop() > blueHole.getBottom()
+                || ballImage.getBottom() < blueHole.getTop() && ballImage.getBottom() > blueHole.getBottom())) {
+            rlayout.removeView(ballImage);
+        }
+        if(ballImage.getRight() < blueHole.getRight() && ballImage.getRight() > blueHole.getLeft() && (
+                ballImage.getTop() < blueHole.getTop() && ballImage.getTop() > blueHole.getBottom()
+                || ballImage.getBottom() < blueHole.getTop() && ballImage.getBottom() > blueHole.getBottom())) {
+            rlayout.removeView(ballImage);
+        }
+        if(ballImage.getTop() < blueHole.getTop() && ballImage.getTop() > blueHole.getBottom() && (
+                ballImage.getLeft() < blueHole.getRight() && ballImage.getLeft() > blueHole.getLeft()
+                || ballImage.getRight() < blueHole.getRight() && ballImage.getRight() > blueHole.getLeft())) {
+            rlayout.removeView(ballImage);
+        }
+        if (ballImage.getBottom() < blueHole.getTop() && ballImage.getBottom() > blueHole.getBottom() && (
+                ballImage.getLeft() < blueHole.getRight() && ballImage.getLeft() > blueHole.getLeft()
+                || ballImage.getRight() < blueHole.getRight() && ballImage.getRight() > blueHole.getLeft())) {
+            rlayout.removeView(ballImage);
+        }
+
+    }
+
+
+
 }
