@@ -33,6 +33,8 @@ public class Ball {
     private RelativeLayout rlayout;
     private ImageView ballImage;
 
+    private ImageView blueHole;
+
     // Color of ball
     private Color ballColor;
 
@@ -42,6 +44,7 @@ public class Ball {
         this.dx = dx;
         this.dy = dy;
         this.rlayout = rlayout;
+
         this.ballImage = image;
         ballImage.setBackgroundResource(R.drawable.vo);
 
@@ -49,20 +52,29 @@ public class Ball {
         ballImage.setLayoutParams(parms);
         ballImage.requestLayout();
         ballImage.setX(x);
-        ballImage.setY(-1);
+        ballImage.setY(y);
 
         rlayout.addView(ballImage);
     }
 
-    public void render(int width, int height) {
-        if (ballImage.getX() + getDx() < 0.0 || ballImage.getX() + getDx() > width) {
+    public void render(int top, int bottom, int left, int right) {
+
+        checkCollision();
+
+        if (ballImage.getX() + getDx() < left || ballImage.getX() + getDx() + 60 > right) {
             setDx(-getDx());
         }
-        if (ballImage.getY() + getDy() < 0.0 || ballImage.getY() + getDy() > height) {
+
+        if(getDy() < 0 && ballImage.getY() + getDy() < top) {
+            setDy(-getDy());
+        }
+        if(getDy() > 0 && ballImage.getY() + getDy() + 60 > bottom) {
             setDy(-getDy());
         }
         ballImage.setX((ballImage.getX() + getDx()));
         ballImage.setY((ballImage.getY() + getDy()));
+
+        checkCollision();
     }
 
     public int getDx() {
@@ -79,5 +91,34 @@ public class Ball {
 
     public void setDy(int dy) {
         this.dy = dy;
+    }
+
+    public void checkCollision() {
+
+//        System.out.println(ballImage.getTop() + " " + blueHole.getTop());
+////        System.out.println(ballImage.getBottom() + " " + blueHole.getBottom());
+////        System.out.println(ballImage.getLeft() + " " + blueHole.getLeft());
+////        System.out.println(ballImage.getRight() + " " + blueHole.getRight());
+//        if(ballImage.getLeft() < blueHole.getRight() && ballImage.getLeft() > blueHole.getLeft() && (
+//                ballImage.getTop() < blueHole.getTop() && ballImage.getTop() > blueHole.getBottom()
+//                || ballImage.getBottom() < blueHole.getTop() && ballImage.getBottom() > blueHole.getBottom())) {
+//            rlayout.removeView(ballImage);
+//        }
+//        if(ballImage.getRight() < blueHole.getRight() && ballImage.getRight() > blueHole.getLeft() && (
+//                ballImage.getTop() < blueHole.getTop() && ballImage.getTop() > blueHole.getBottom()
+//                || ballImage.getBottom() < blueHole.getTop() && ballImage.getBottom() > blueHole.getBottom())) {
+//            rlayout.removeView(ballImage);
+//        }
+//        if(ballImage.getTop() < blueHole.getTop() && ballImage.getTop() > blueHole.getBottom() && (
+//                ballImage.getLeft() < blueHole.getRight() && ballImage.getLeft() > blueHole.getLeft()
+//                || ballImage.getRight() < blueHole.getRight() && ballImage.getRight() > blueHole.getLeft())) {
+//            rlayout.removeView(ballImage);
+//        }
+//        if (ballImage.getBottom() < blueHole.getTop() && ballImage.getBottom() > blueHole.getBottom() && (
+//                ballImage.getLeft() < blueHole.getRight() && ballImage.getLeft() > blueHole.getLeft()
+//                || ballImage.getRight() < blueHole.getRight() && ballImage.getRight() > blueHole.getLeft())) {
+//            rlayout.removeView(ballImage);
+//        }
+
     }
 }

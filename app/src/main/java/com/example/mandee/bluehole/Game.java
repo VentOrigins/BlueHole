@@ -13,22 +13,29 @@ public class Game {
     // Blue Portal
     // private BluePortal bluePortal;
     private ArrayList<Ball> listOfBalls;
-
-    private int screenWidth;
-    private int screenHeight;
+    // Borders
+    private int screenTop;
+    private int screenBottom;
+    private int screenLeft;
+    private int screenRight;
 
     public Game() {
         // bluePortal = new BluePortal();
         this.listOfBalls = new ArrayList<Ball>();
-        this.screenWidth = 0;
-        this.screenHeight = 0;
+        this.screenTop = 0;
+        this.screenBottom = 0;
+        this.screenLeft = 0;
+        this.screenRight = 0;
+
     }
 
-    public Game(int screenWidth, int screenHeight) {
+    public Game(int top, int bottom, int left, int right) {
         // bluePortal = new BluePortal();
         this.listOfBalls = new ArrayList<Ball>();
-        this.screenWidth = screenWidth;
-        this.screenHeight = screenHeight;
+        this.screenTop = top;
+        this.screenBottom = bottom;
+        this.screenLeft = left;
+        this.screenRight = right;
     }
 
     public void init() {
@@ -40,7 +47,7 @@ public class Game {
 
         //Moves each ball
         for (int i = 0; i < listOfBalls.size(); ++i) {
-            listOfBalls.get(i).render(screenWidth, screenHeight);
+            listOfBalls.get(i).render(screenTop, screenBottom, screenLeft, screenRight);
         }
     }
 
@@ -48,7 +55,9 @@ public class Game {
         Random rand = new Random();
 
         // The argument values for the ball's constructor
-        int startingBallPosX = rand.nextInt(screenWidth);
+        System.out.println("Screen left: " + screenLeft);
+        System.out.println("Screen right: " + screenRight);
+        int startingBallPosX = rand.nextInt(screenRight - screenLeft) + screenLeft;
         int startingBallPosY = 0;
         int changeOfBallPosX = rand.nextInt(41) - 20;
         int changeOfBallPosY = rand.nextInt(21) + 1;
@@ -57,11 +66,19 @@ public class Game {
         listOfBalls.add(ball);
     }
 
-    public int getScreenWidth() {
-        return screenWidth;
+    public int getTop() {
+        return screenTop;
     }
 
-    public int getScreenHeight() {
-        return screenHeight;
+    public int getBottom() {
+        return screenBottom;
+    }
+
+    public int getLeft() {
+        return screenLeft;
+    }
+
+    public int getRight() {
+        return screenRight;
     }
 }
