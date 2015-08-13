@@ -18,9 +18,8 @@ import java.util.Random;
 
 public class BlueHoleMain extends ActionBarActivity {
     Handler h = new Handler();
-    int delay = 5000; //milliseconds
-    int num = 0;
-    Random rand = new Random();
+    int ballSpawnSpeed = 5000; //milliseconds
+    int ballMovementSpeed = 50;
 
     // The screen size of device
     int screenWidth = 0;
@@ -37,15 +36,7 @@ public class BlueHoleMain extends ActionBarActivity {
         screenWidth = display.widthPixels;
         screenHeight = display.heightPixels;
 
-        System.out.println("Screen width: " + screenWidth);
-        System.out.println("Screen height: " + screenHeight);
-
         RelativeLayout rlayout = (RelativeLayout) findViewById(R.id.rlayout);
-        //Global class game ball which indicates which ball to get
-
-        // nextInt is normally exclusive of the top value,
-        // so add 1 to make it inclusive
-
         rlayout.setOnTouchListener(new View.OnTouchListener() {
             @Override
             public boolean onTouch(View v, MotionEvent event) {
@@ -60,25 +51,33 @@ public class BlueHoleMain extends ActionBarActivity {
             }
         });
 
+        // Initializes the game
+        final Game game = new Game(screenWidth, screenHeight);
+        game.init();
+
+        System.out.println("Screen width: " + screenWidth);
+        System.out.println("Screen height: " + screenHeight);
+
         // Every time 5 seconds, call this
         h.postDelayed(new Runnable() {
             public void run() {
-                // The argument values for the ball's constructor
-                long ballSpeed = 30;
-                int startingBallPosX = rand.nextInt(screenWidth);
-                int startingBallPosY = 0;
-                System.out.println("The starting x position: " + startingBallPosX);
-                int changeOfBallPosX = rand.nextInt(41) - 20;
-                int changeOfBallPosY = rand.nextInt(21) + 1;
                 RelativeLayout rlayout = (RelativeLayout) findViewById(R.id.rlayout);
                 ImageView ballImage = new ImageView(BlueHoleMain.this);
+                game.addBallToBallList(rlayout, ballImage);
 
-                Ball x = new Ball(ballSpeed, startingBallPosX, startingBallPosY, changeOfBallPosX, changeOfBallPosY, rlayout,ballImage, screenWidth, screenHeight);
-                num = num + 10;
-
-                h.postDelayed(this, delay);
+                h.postDelayed(this, ballSpawnSpeed);
             }
-        }, delay);
+        }, ballSpawnSpeed);
+
+        // Every 50 milliseconds, call this
+        h.postDelayed(new Runnable() {
+            public void run() {
+                game.render();
+
+                h.postDelayed(this, ballMovementSpeed);
+            }
+        }, ballMovementSpeed);
+
     }
 
     @Override
