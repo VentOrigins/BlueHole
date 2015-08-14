@@ -25,7 +25,7 @@ import java.util.Random;
 public class BlueHoleMain extends ActionBarActivity {
     Handler h = new Handler();
     int ballSpawnSpeed = 5000; //milliseconds
-    int ballMovementSpeed = 50;
+    int ballMovementSpeed = 10;
 
 
     @Override
@@ -72,10 +72,10 @@ public class BlueHoleMain extends ActionBarActivity {
         Resources r = getResources();
         RelativeLayout rlayout = (RelativeLayout) findViewById(R.id.rlayout);
         float px = TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 16, r.getDisplayMetrics());
-        int top = rlayout.getTop() + Math.round(px);
-        int bottom = rlayout.getBottom() - Math.round(px);
-        int left = rlayout.getLeft() + Math.round(px);
-        int right = rlayout.getRight() - Math.round(px);
+        float top = rlayout.getTop() + px;
+        float bottom = rlayout.getBottom() - px;
+        float left = rlayout.getLeft() + px;
+        float right = rlayout.getRight() - px;
 
         // Initializes the game
         final Game game = new Game(top, bottom, left, right);

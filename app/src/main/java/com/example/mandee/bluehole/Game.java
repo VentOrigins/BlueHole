@@ -14,10 +14,10 @@ public class Game {
     // private BluePortal bluePortal;
     private ArrayList<Ball> listOfBalls;
     // Borders
-    private int screenTop;
-    private int screenBottom;
-    private int screenLeft;
-    private int screenRight;
+    private float screenTop;
+    private float screenBottom;
+    private float screenLeft;
+    private float screenRight;
 
     public Game() {
         // bluePortal = new BluePortal();
@@ -29,7 +29,7 @@ public class Game {
 
     }
 
-    public Game(int top, int bottom, int left, int right) {
+    public Game(float top, float bottom, float left, float right) {
         // bluePortal = new BluePortal();
         this.listOfBalls = new ArrayList<Ball>();
         this.screenTop = top;
@@ -57,28 +57,31 @@ public class Game {
         // The argument values for the ball's constructor
         System.out.println("Screen left: " + screenLeft);
         System.out.println("Screen right: " + screenRight);
-        int startingBallPosX = rand.nextInt(screenRight - screenLeft) + screenLeft;
+        int startingBallPosX = rand.nextInt( Math.round(screenRight - screenLeft) - 70) + Math.round(screenLeft);
         int startingBallPosY = 0;
-        int changeOfBallPosX = rand.nextInt(41) - 20;
-        int changeOfBallPosY = rand.nextInt(21) + 1;
+//        int changeOfBallPosX = rand.nextInt(41) - 20;
+//        int changeOfBallPosY = rand.nextInt(21) + 1;
+
+        int changeOfBallPosX = rand.nextInt(21) - 10;
+        int changeOfBallPosY = rand.nextInt(11) + 1;
 
         Ball ball = new Ball(startingBallPosX, startingBallPosY, changeOfBallPosX, changeOfBallPosY, rlayout, ballImage);
         listOfBalls.add(ball);
     }
 
-    public int getTop() {
+    public float getTop() {
         return screenTop;
     }
 
-    public int getBottom() {
+    public float getBottom() {
         return screenBottom;
     }
 
-    public int getLeft() {
+    public float getLeft() {
         return screenLeft;
     }
 
-    public int getRight() {
+    public float getRight() {
         return screenRight;
     }
 }

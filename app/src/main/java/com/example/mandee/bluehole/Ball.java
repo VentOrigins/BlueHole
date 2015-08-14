@@ -15,6 +15,8 @@ import android.util.Log;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 
+import java.util.Random;
+
 /**
  * Created by MANDEE on August/10/15.
  */
@@ -46,9 +48,15 @@ public class Ball {
         this.rlayout = rlayout;
 
         this.ballImage = image;
-        ballImage.setBackgroundResource(R.drawable.vo);
 
-        LinearLayout.LayoutParams parms = new LinearLayout.LayoutParams(60,60);
+        Random rand = new Random();
+        if (rand.nextInt(2) == 0)
+            ballImage.setBackgroundResource(R.drawable.voredball);
+        else {
+            ballImage.setBackgroundResource(R.drawable.voblueball);
+        }
+
+        LinearLayout.LayoutParams parms = new LinearLayout.LayoutParams(40,40);
         ballImage.setLayoutParams(parms);
         ballImage.requestLayout();
         ballImage.setX(x);
@@ -57,18 +65,18 @@ public class Ball {
         rlayout.addView(ballImage);
     }
 
-    public void render(int top, int bottom, int left, int right) {
+    public void render(float top, float bottom, float left, float right) {
 
         checkCollision();
 
-        if (ballImage.getX() + getDx() < left || ballImage.getX() + getDx() + 60 > right) {
+        if (ballImage.getX() + getDx() < left || ballImage.getX() + getDx() + 40 > right) {
             setDx(-getDx());
         }
 
         if(getDy() < 0 && ballImage.getY() + getDy() < top) {
             setDy(-getDy());
         }
-        if(getDy() > 0 && ballImage.getY() + getDy() + 60 > bottom) {
+        if(getDy() > 0 && ballImage.getY() + getDy() + 40 > bottom) {
             setDy(-getDy());
         }
         ballImage.setX((ballImage.getX() + getDx()));
