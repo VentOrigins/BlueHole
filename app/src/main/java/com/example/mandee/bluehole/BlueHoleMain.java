@@ -51,7 +51,7 @@ public class BlueHoleMain extends ActionBarActivity {
         ImageView imageViewBH = (ImageView) findViewById(R.id.bluehole);
         r = getResources();
         float bhWidth = TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 30, r.getDisplayMetrics());
-        float bhHeight = TypedValue.gapplyDimension(TypedValue.COMPLEX_UNIT_DIP, 30, r.getDisplayMetrics());
+        float bhHeight = TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 30, r.getDisplayMetrics());
 
         this.blueHole = new BlueHole(imageViewBH, bhWidth, bhHeight);
     }
