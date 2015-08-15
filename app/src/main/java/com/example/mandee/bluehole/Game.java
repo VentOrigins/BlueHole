@@ -19,6 +19,9 @@ public class Game {
     private int screenLeft;
     private int screenRight;
 
+    private BlueHole blueHole;
+
+
     public Game() {
         // bluePortal = new BluePortal();
         this.listOfBalls = new ArrayList<Ball>();
@@ -29,13 +32,15 @@ public class Game {
 
     }
 
-    public Game(int top, int bottom, int left, int right) {
+    public Game(int top, int bottom, int left, int right, BlueHole blueHole) {
         // bluePortal = new BluePortal();
         this.listOfBalls = new ArrayList<Ball>();
         this.screenTop = top;
         this.screenBottom = bottom;
         this.screenLeft = left;
         this.screenRight = right;
+
+        this.blueHole = blueHole;
     }
 
     public void init() {
@@ -47,7 +52,19 @@ public class Game {
 
         //Moves each ball
         for (int i = 0; i < listOfBalls.size(); ++i) {
-            listOfBalls.get(i).render(screenTop, screenBottom, screenLeft, screenRight);
+
+            if(listOfBalls.get(i).checkCollision()) {
+                listOfBalls.remove(i);
+            }
+            else {
+                listOfBalls.get(i).render(screenTop, screenBottom, screenLeft, screenRight);
+                if(listOfBalls.get(i).checkCollision()) {
+                    listOfBalls.remove(i);
+                }
+
+            }
+
+
         }
     }
 
@@ -55,14 +72,12 @@ public class Game {
         Random rand = new Random();
 
         // The argument values for the ball's constructor
-        System.out.println("Screen left: " + screenLeft);
-        System.out.println("Screen right: " + screenRight);
         int startingBallPosX = rand.nextInt(screenRight - screenLeft) + screenLeft;
         int startingBallPosY = 0;
         int changeOfBallPosX = rand.nextInt(41) - 20;
         int changeOfBallPosY = rand.nextInt(21) + 1;
 
-        Ball ball = new Ball(startingBallPosX, startingBallPosY, changeOfBallPosX, changeOfBallPosY, rlayout, ballImage);
+        Ball ball = new Ball(startingBallPosX, startingBallPosY, changeOfBallPosX, changeOfBallPosY, rlayout, ballImage, blueHole);
         listOfBalls.add(ball);
     }
 
