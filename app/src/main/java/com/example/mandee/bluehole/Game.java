@@ -84,4 +84,12 @@ public class Game {
     public float getRight() {
         return screenRight;
     }
+
+    public void printAllBalls() {
+        System.out.print("Balls: ");
+        for (int i = 0; i < listOfBalls.size(); ++i) {
+            System.out.print(i + ",");
+        }
+        System.out.print("\n");
+    }
 }

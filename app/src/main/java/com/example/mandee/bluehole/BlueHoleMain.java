@@ -26,7 +26,9 @@ public class BlueHoleMain extends ActionBarActivity {
     Handler h = new Handler();
     int ballSpawnSpeed = 5000; //milliseconds
     int ballMovementSpeed = 10;
-
+    boolean ifPaused = false;
+    Game game;
+    boolean ifFirstTimeRunning = true;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -35,9 +37,25 @@ public class BlueHoleMain extends ActionBarActivity {
     }
 
     @Override
+    public void onPause() {
+        super.onPause();
+        ifPaused = true;
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        ifPaused = false;
+    }
+
+    @Override
     public void onWindowFocusChanged(boolean hasFocus) {
-        onBlueHoleTouch();
-        Game game = gameInit();
+        super.onWindowFocusChanged(hasFocus);
+        if (hasFocus && ifFirstTimeRunning) {
+            ifFirstTimeRunning = false;
+            onBlueHoleTouch();
+            game = gameInit();
+        }
         ballSpawnTick(game);
         ballRenderTick(game);
     }
@@ -92,11 +110,12 @@ public class BlueHoleMain extends ActionBarActivity {
             RelativeLayout rlayout = (RelativeLayout) findViewById(R.id.rlayout);
 
             public void run() {
-                RelativeLayout rlayout = (RelativeLayout) findViewById(R.id.rlayout);
-                ImageView ballImage = new ImageView(BlueHoleMain.this);
-                game.addBallToBallList(rlayout, ballImage);
-
-                h.postDelayed(this, ballSpawnSpeed);
+                if (!ifPaused) {
+                    ImageView ballImage = new ImageView(BlueHoleMain.this);
+                    game.addBallToBallList(rlayout, ballImage);
+                    game.printAllBalls();
+                    h.postDelayed(this, ballSpawnSpeed);
+                }
             }
         }, ballSpawnSpeed);
     }
@@ -105,9 +124,10 @@ public class BlueHoleMain extends ActionBarActivity {
         // Every 50 milliseconds, call this
         h.postDelayed(new Runnable() {
             public void run() {
-                game.render();
-
-                h.postDelayed(this, ballMovementSpeed);
+                if (!ifPaused) {
+                    game.render();
+                    h.postDelayed(this, ballMovementSpeed);
+                }
             }
         }, ballMovementSpeed);
     }

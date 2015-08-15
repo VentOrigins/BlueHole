@@ -49,11 +49,19 @@ public class Ball {
 
         this.ballImage = image;
 
+        // Chooses color of the ball
         Random rand = new Random();
-        if (rand.nextInt(2) == 0)
+        int color = rand.nextInt(4);
+        if (color == 0)
             ballImage.setBackgroundResource(R.drawable.voredball);
-        else {
+        else if (color == 1) {
             ballImage.setBackgroundResource(R.drawable.voblueball);
+        }
+        else if (color == 2) {
+            ballImage.setBackgroundResource(R.drawable.vogreenball);
+        }
+        else if (color == 3) {
+            ballImage.setBackgroundResource(R.drawable.voblackball);
         }
 
         LinearLayout.LayoutParams parms = new LinearLayout.LayoutParams(40,40);
