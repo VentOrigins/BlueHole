@@ -1,23 +1,17 @@
 package com.example.mandee.bluehole;
 
-import android.annotation.TargetApi;
 import android.content.res.Resources;
-import android.graphics.Point;
-import android.os.Build;
 import android.os.Handler;
 import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
-import android.util.DisplayMetrics;
 import android.util.TypedValue;
-import android.view.Display;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.MotionEvent;
 import android.view.View;
-import android.view.View.OnClickListener;
 import android.widget.ImageView;
-import android.util.Log;
 import android.widget.RelativeLayout;
+import android.widget.TextView;
 
 import java.util.Random;
 
@@ -25,10 +19,14 @@ import java.util.Random;
 public class BlueHoleMain extends ActionBarActivity {
     Handler h = new Handler();
     private int ballSpawnSpeed = 5000; //milliseconds
-    private int ballMovementSpeed = 50;
+    private int ballMovementSpeed = 10;
     private BlueHole blueHole;
     private Resources r;
+    private RelativeLayout gameLayout;
     private RelativeLayout rlayout;
+    private ImageView nextBall;
+
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -46,6 +44,9 @@ public class BlueHoleMain extends ActionBarActivity {
     }
 
     public void createBlueHole() {
+        nextBall = (ImageView) findViewById(R.id.nextBall);
+        nextBall.setTag("Red");
+        gameLayout = (RelativeLayout) findViewById(R.id.gameLayout);
         rlayout = (RelativeLayout) findViewById(R.id.rlayout);
         ImageView imageViewBH = (ImageView) findViewById(R.id.bluehole);
         r = getResources();
@@ -60,12 +61,11 @@ public class BlueHoleMain extends ActionBarActivity {
         rlayout.setOnTouchListener(new View.OnTouchListener() {
             @Override
             public boolean onTouch(View v, MotionEvent event) {
-                RelativeLayout rlayout = (RelativeLayout) findViewById(R.id.rlayout);
                 float px = TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP,16, r.getDisplayMetrics());
-                int top = rlayout.getTop() + Math.round(px);
-                int bottom = rlayout.getBottom() - Math.round(px);
-                int left = rlayout.getLeft() + Math.round(px);
-                int right = rlayout.getRight() - Math.round(px);
+                int top = gameLayout.getTop() + Math.round(px);
+                int bottom = gameLayout.getBottom() - Math.round(px);
+                int left = gameLayout.getLeft() + Math.round(px);
+                int right = gameLayout.getRight() - Math.round(px);
                 ImageView imageBH = (ImageView) findViewById(R.id.bluehole);
                 int x = imageBH.getWidth()/2;
                 int y = imageBH.getHeight()/2;
@@ -82,17 +82,17 @@ public class BlueHoleMain extends ActionBarActivity {
     public Game gameInit() {
         // Creates the bounds
         float px = TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 16, r.getDisplayMetrics());
-        int top = rlayout.getTop() + Math.round(px);
-        int bottom = rlayout.getBottom() - Math.round(px);
-        int left = rlayout.getLeft() + Math.round(px);
-        int right = rlayout.getRight() - Math.round(px);
+        float top = gameLayout.getTop() + px;
+        float bottom = gameLayout.getBottom() - px;
+        float left = gameLayout.getLeft() + px;
+        float right = gameLayout.getRight() - px;
 
-
+        TextView textBar = (TextView) findViewById(R.id.textBar);
+        TextView scoreBar = (TextView) findViewById(R.id.scoreBar);
 
 
         // Initializes the game
-        final Game game = new Game(top, bottom, left, right, blueHole);
-        game.init();
+        final Game game = new Game(top, bottom, left, right, blueHole, nextBall, textBar, scoreBar);
 
 
         return game;
@@ -101,9 +101,10 @@ public class BlueHoleMain extends ActionBarActivity {
     public void ballSpawnTick(final Game game) {
         // Every time 5 seconds, call this
         h.postDelayed(new Runnable() {
-            RelativeLayout rlayout = (RelativeLayout) findViewById(R.id.rlayout);
+
 
             public void run() {
+                RelativeLayout rlayout = (RelativeLayout) findViewById(R.id.rlayout);
                 ImageView ballImage = new ImageView(BlueHoleMain.this);
                 game.addBallToBallList(rlayout, ballImage);
 
@@ -135,12 +136,8 @@ public class BlueHoleMain extends ActionBarActivity {
         // Handle action bar item clicks here. The action bar will
         // automatically handle clicks on the Home/Up button, so long
         // as you specify a parent activity in AndroidManifest.xml.
-        int id = item.getItemId();
 
-        //noinspection SimplifiableIfStatement
-        if (id == R.id.action_settings) {
-            return true;
-        }
+
         return super.onOptionsItemSelected(item);
     }
 }

@@ -2,10 +2,13 @@ package com.example.mandee.bluehole;
 
 import android.content.res.Resources;
 import android.graphics.Color;
+import android.graphics.drawable.Drawable;
 import android.os.Handler;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
+
+import java.util.Random;
 
 /**
  * Created by MANDEE on August/10/15.
@@ -40,9 +43,19 @@ public class Ball {
 
         this.ballImage = image;
         this.blueHole = blueHole;
-        ballImage.setBackgroundResource(R.drawable.vo);
 
-        LinearLayout.LayoutParams parms = new LinearLayout.LayoutParams(60,60);
+
+        Random rand = new Random();
+        if (rand.nextInt(2) == 0) {
+            ballImage.setBackgroundResource(R.drawable.voredball);
+            ballImage.setTag("Red");
+        }
+        else {
+            ballImage.setBackgroundResource(R.drawable.voblueball);
+            ballImage.setTag("Blue");
+        }
+
+        LinearLayout.LayoutParams parms = new LinearLayout.LayoutParams(40,40);
         ballImage.setLayoutParams(parms);
         ballImage.requestLayout();
         ballImage.setX(x);
@@ -51,7 +64,7 @@ public class Ball {
         rlayout.addView(ballImage);
     }
 
-    public void render(int top, int bottom, int left, int right) {
+    public void render(float top, float bottom, float left, float right) {
 
         if (ballImage.getX() + getDx() < left || ballImage.getX() + getDx() + 60 > right) {
             setDx(-getDx());
@@ -60,7 +73,7 @@ public class Ball {
         if(getDy() < 0 && ballImage.getY() + getDy() < top) {
             setDy(-getDy());
         }
-        if(getDy() > 0 && ballImage.getY() + getDy() + 60 > bottom) {
+        if(getDy() > 0 && ballImage.getY() + getDy() + 40 > bottom) {
             setDy(-getDy());
         }
         ballImage.setX((ballImage.getX() + getDx()));
@@ -84,7 +97,7 @@ public class Ball {
         this.dy = dy;
     }
     //Return true if collison happens
-    public boolean checkCollision() {
+    public Object checkCollision() {
 
         //Check if the ball's bottom is less than the blue hole's top  but greater than the bluehole's bottom
         //If it is than check if ball's left side is less than the bluehole's right but greater than the bluehole's left
@@ -93,7 +106,7 @@ public class Ball {
                 && ( (ballImage.getX() < blueHole.getRight() && ballImage.getX() > blueHole.getLeft())
                 || ballImage.getX() + 60 < blueHole.getRight() && ballImage.getX() + 60 > blueHole.getLeft())) {
             rlayout.removeView(ballImage);
-            return true;
+            return ballImage.getTag();
         }
         //Check if the ball's top is less than the bluehole's bottom but greater than the bluehole's top
         //If it is check if the ball's left side is less t han the bluehole's right but greater than the bluehole's left
@@ -102,8 +115,8 @@ public class Ball {
                 && ( (ballImage.getX() < blueHole.getRight() && ballImage.getX() > blueHole.getLeft())
                 || ballImage.getX() + 60 < blueHole.getRight() && ballImage.getX() + 60 > blueHole.getLeft())) {
             rlayout.removeView(ballImage);
-            return true;
+            return ballImage.getTag();
         }
-        return false;
+        return null;
     }
 }
