@@ -125,6 +125,7 @@ public class Game {
         return screenRight;
     }
 
+<<<<<<< HEAD
     private void changeBall() {
 
         int score = Integer.parseInt(scoreBar.getText().toString());
@@ -145,5 +146,13 @@ public class Game {
         nextBall.setImageDrawable(null);
         textBar.setText("Game Over");
 
+=======
+    public void printAllBalls() {
+        System.out.print("Balls: ");
+        for (int i = 0; i < listOfBalls.size(); ++i) {
+            System.out.print(i + ",");
+        }
+        System.out.print("\n");
+>>>>>>> 00a52e17ea08146200f810f3ab061e41cd9c1cb6
     }
 }
