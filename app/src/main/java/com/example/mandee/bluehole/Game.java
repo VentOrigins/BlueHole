@@ -96,7 +96,7 @@ public class Game {
     public void addBallToBallList(RelativeLayout rlayout, ImageView ballImage) {
 
 
-        int startingBallPosX = rand.nextInt( Math.round(screenRight - screenLeft) - 100) + Math.round(screenLeft - 10);
+        int startingBallPosX = rand.nextInt( Math.round(screenRight - screenLeft) - 100) + Math.round(screenLeft - 5);
         int startingBallPosY = Math.round(screenTop-2);
 //        int changeOfBallPosX = rand.nextInt(41) - 20;
 //        int changeOfBallPosY = rand.nextInt(21) + 1;
