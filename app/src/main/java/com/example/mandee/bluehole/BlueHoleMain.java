@@ -18,9 +18,10 @@ import java.util.Random;
 
 public class BlueHoleMain extends ActionBarActivity {
     Handler h = new Handler();
-<<<<<<< HEAD
-    private int ballSpawnSpeed = 5000; //milliseconds
-    private int ballMovementSpeed = 10;
+
+    int ballSpawnSpeed = 5000; //milliseconds
+    int ballMovementSpeed = 10;
+
     private BlueHole blueHole;
     private Resources r;
     private RelativeLayout gameLayout;
@@ -28,13 +29,10 @@ public class BlueHoleMain extends ActionBarActivity {
     private ImageView nextBall;
 
 
-=======
-    int ballSpawnSpeed = 5000; //milliseconds
-    int ballMovementSpeed = 10;
+
     boolean ifPaused = false;
     Game game;
     boolean ifFirstTimeRunning = true;
->>>>>>> 00a52e17ea08146200f810f3ab061e41cd9c1cb6
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -56,20 +54,15 @@ public class BlueHoleMain extends ActionBarActivity {
 
     @Override
     public void onWindowFocusChanged(boolean hasFocus) {
-<<<<<<< HEAD
-        createBlueHole();
-        onBlueHoleTouch();
-        Game game = gameInit();
-=======
         super.onWindowFocusChanged(hasFocus);
         if (hasFocus && ifFirstTimeRunning) {
             ifFirstTimeRunning = false;
+            createBlueHole();
             onBlueHoleTouch();
             game = gameInit();
         }
->>>>>>> 00a52e17ea08146200f810f3ab061e41cd9c1cb6
-        ballSpawnTick(game);
-        ballRenderTick(game);
+            ballSpawnTick(game);
+            ballRenderTick(game);
     }
 
     public void createBlueHole() {
@@ -136,7 +129,7 @@ public class BlueHoleMain extends ActionBarActivity {
                 if (!ifPaused) {
                     ImageView ballImage = new ImageView(BlueHoleMain.this);
                     game.addBallToBallList(rlayout, ballImage);
-                    game.printAllBalls();
+//                    game.printAllBalls();
                     h.postDelayed(this, ballSpawnSpeed);
                 }
             }

@@ -125,19 +125,27 @@ public class Game {
         return screenRight;
     }
 
-<<<<<<< HEAD
     private void changeBall() {
 
         int score = Integer.parseInt(scoreBar.getText().toString());
         score++;
         scoreBar.setText(Integer.toString(score));
-        if (rand.nextInt(2) == 0) {
-            nextBall.setImageResource(R.drawable.voredball);
+        int color = rand.nextInt(4);
+        if (color == 0) {
+            nextBall.setBackgroundResource(R.drawable.voredball);
             nextBall.setTag("Red");
         }
-        else {
-            nextBall.setImageResource(R.drawable.voblueball);
+        else if (color == 1) {
+            nextBall.setBackgroundResource(R.drawable.voblueball);
             nextBall.setTag("Blue");
+        }
+        else if (color == 2) {
+            nextBall.setBackgroundResource(R.drawable.vogreenball);
+            nextBall.setTag("Green");
+        }
+        else if (color == 3) {
+            nextBall.setBackgroundResource(R.drawable.voblackball);
+            nextBall.setTag("Black");
         }
 
     }
@@ -145,14 +153,13 @@ public class Game {
     private void gameOver() {
         nextBall.setImageDrawable(null);
         textBar.setText("Game Over");
+    }
 
-=======
     public void printAllBalls() {
         System.out.print("Balls: ");
         for (int i = 0; i < listOfBalls.size(); ++i) {
             System.out.print(i + ",");
         }
         System.out.print("\n");
->>>>>>> 00a52e17ea08146200f810f3ab061e41cd9c1cb6
     }
 }

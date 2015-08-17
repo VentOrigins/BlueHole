@@ -44,22 +44,26 @@ public class Ball {
         this.ballImage = image;
         this.blueHole = blueHole;
 
-g
+
         // Chooses color of the ball
         Random rand = new Random();
 
         int color = rand.nextInt(4);
-        if (color == 0)
+        if (color == 0){
             ballImage.setBackgroundResource(R.drawable.voredball);
+            ballImage.setTag("Red");
+        }
         else if (color == 1) {
             ballImage.setBackgroundResource(R.drawable.voblueball);
             ballImage.setTag("Blue");
         }
         else if (color == 2) {
             ballImage.setBackgroundResource(R.drawable.vogreenball);
+            ballImage.setTag("Green");
         }
         else if (color == 3) {
             ballImage.setBackgroundResource(R.drawable.voblackball);
+            ballImage.setTag("Black");
         }
 
         LinearLayout.LayoutParams parms = new LinearLayout.LayoutParams(40,40);
