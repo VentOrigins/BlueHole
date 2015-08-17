@@ -44,7 +44,7 @@ public class Ball {
         this.ballImage = image;
         this.blueHole = blueHole;
 
-
+g
         // Chooses color of the ball
         Random rand = new Random();
 
