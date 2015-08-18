@@ -1,6 +1,7 @@
 package com.example.mandee.bluehole;
 
 import android.content.Context;
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.res.Resources;
 import android.os.Handler;
@@ -42,13 +43,17 @@ public class BlueHoleMain extends ActionBarActivity {
 
     private Runnable ballSpawn;
     private Runnable ballRender;
+    private Runnable gameOver;
+    private Context thisContext;
 
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_blue_hole_main);
+        thisContext = this;
         createRunnables();
+
 
     }
 
@@ -161,7 +166,6 @@ public class BlueHoleMain extends ActionBarActivity {
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
-        getMenuInflater().inflate(R.menu.menu_blue_hole_main, menu);
         return true;
     }
 
@@ -181,8 +185,10 @@ public class BlueHoleMain extends ActionBarActivity {
 
         TextView highScore = (TextView) findViewById(R.id.highScore);
         Button restart = (Button) findViewById(R.id.restartButton);
+        Button mainMenu = (Button) findViewById(R.id.mainMenuButton);
         highScore.setVisibility(View.INVISIBLE);
         restart.setVisibility(View.INVISIBLE);
+        mainMenu.setVisibility(View.INVISIBLE);
 
 
         ballSpawnTick();
@@ -199,6 +205,7 @@ public class BlueHoleMain extends ActionBarActivity {
                 if (!ifPaused && !game.isGameOver()) {
                     ImageView ballImage = new ImageView(BlueHoleMain.this);
                     game.addBallToBallList(rlayout, ballImage);
+                    game.addBlackToBallList(rlayout, ballImage);
 //                    game.printAllBalls();
                     h.postDelayed(this, ballSpawnSpeed);
                 }
@@ -219,34 +226,51 @@ public class BlueHoleMain extends ActionBarActivity {
             }
         };
 
+        gameOver = new Runnable() {
+            public void run() {
+                SharedPreferences prefs = thisContext.getSharedPreferences("myHighScore", Context.MODE_PRIVATE);
+                int score = prefs.getInt("highScore", 0); //0 is the default value
+                //If stored highScore is lower than gameHigh score commit new highScore and
+                //Store new high score into score
+                if(score < Integer.parseInt(game.getScore())){
+                    SharedPreferences.Editor editor = prefs.edit();
+                    editor.putInt("highScore", Integer.parseInt(game.getScore()));
+                    editor.commit();
+                    score = Integer.parseInt(game.getScore());
+                }
+
+                TextView highScore = (TextView) findViewById(R.id.highScore);
+                Button restart = (Button) findViewById(R.id.restartButton);
+                Button mainMenu = (Button) findViewById(R.id.mainMenuButton);
+
+                highScore.setVisibility(View.VISIBLE);
+                highScore.bringToFront();
+                restart.setVisibility(View.VISIBLE);
+                restart.bringToFront();
+                mainMenu.setVisibility(View.VISIBLE);
+                mainMenu.bringToFront();
+
+                highScore.setText("High Score: " + Integer.toString(score));
+            }
+        };
+
     }
 
     private void gameOver() {
 
 
-        SharedPreferences prefs = this.getSharedPreferences("myHighScore", Context.MODE_PRIVATE);
-        int score = prefs.getInt("highScore", 0); //0 is the default value
-        //If stored highScore is lower than gameHigh score commit new highScore and
-        //Store new high score into score
-        if(score < Integer.parseInt(game.getScore())){
-            SharedPreferences.Editor editor = prefs.edit();
-            editor.putInt("highScore", Integer.parseInt(game.getScore()));
-            editor.commit();
-            score = Integer.parseInt(game.getScore());
-        }
 
-        TextView highScore = (TextView) findViewById(R.id.highScore);
-        Button restart = (Button) findViewById(R.id.restartButton);
-
-        highScore.setVisibility(View.VISIBLE);
-        highScore.bringToFront();
-        restart.setVisibility(View.VISIBLE);
-        restart.bringToFront();
-
-        highScore.setText("High Score: " + Integer.toString(score));
-
+        h.postDelayed(gameOver, 100);
 
         h.removeCallbacks(ballSpawn);
         h.removeCallbacks(ballRender);
+    }
+
+    public void mainMenu(View view) {
+
+        game.endGame();
+
+        Intent intent = new Intent(this, MainMenu.class);
+        startActivity(intent);
     }
 }

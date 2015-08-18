@@ -88,6 +88,16 @@
         android:text="Restart"
         android:visibility="invisible"
         android:onClick="restartGame"/>
+    <Button
+        android:layout_width="100dp"
+        android:layout_height="100dp"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="20dp"
+        android:layout_below="@+id/restartButton"
+        android:id="@+id/mainMenuButton"
+        android:text="Menu"
+        android:visibility="invisible"
+        android:onClick="mainMenu"/>
 
     <ImageView
         android:layout_width="30dp"

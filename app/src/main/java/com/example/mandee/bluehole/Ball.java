@@ -34,7 +34,7 @@ public class Ball {
     // Color of ball
     private Color ballColor;
 
-    public Ball(int x, int y, int dx, int dy, RelativeLayout rlayout, final ImageView image, BlueHole blueHole) {
+    public Ball(int x, int y, int dx, int dy, RelativeLayout rlayout, final ImageView image, BlueHole blueHole, boolean isBlack) {
         this.x = x;
         this.y = y;
         this.dx = dx;
@@ -48,23 +48,27 @@ public class Ball {
         // Chooses color of the ball
         Random rand = new Random();
 
-        int color = rand.nextInt(4);
-        if (color == 0){
-            ballImage.setBackgroundResource(R.drawable.voredball);
-            ballImage.setTag("Red");
-        }
-        else if (color == 1) {
-            ballImage.setBackgroundResource(R.drawable.voblueball);
-            ballImage.setTag("Blue");
-        }
-        else if (color == 2) {
-            ballImage.setBackgroundResource(R.drawable.vogreenball);
-            ballImage.setTag("Green");
-        }
-        else if (color == 3) {
+        int color = rand.nextInt(3);
+        if(isBlack) {
             ballImage.setBackgroundResource(R.drawable.voblackball);
             ballImage.setTag("Black");
         }
+        else {
+            if (color == 0){
+                ballImage.setBackgroundResource(R.drawable.voredball);
+                ballImage.setTag("Red");
+            }
+            else if (color == 1) {
+                ballImage.setBackgroundResource(R.drawable.voblueball);
+                ballImage.setTag("Blue");
+            }
+            else if (color == 2) {
+                ballImage.setBackgroundResource(R.drawable.vogreenball);
+                ballImage.setTag("Green");
+            }
+        }
+
+
 
         LinearLayout.LayoutParams parms = new LinearLayout.LayoutParams(40,40);
         ballImage.setLayoutParams(parms);
