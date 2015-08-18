@@ -1,17 +1,9 @@
 package com.example.mandee.bluehole;
 
+import android.content.res.Resources;
 import android.graphics.Color;
 import android.os.Handler;
-import android.support.v7.app.ActionBarActivity;
-import android.os.Bundle;
-import android.util.DisplayMetrics;
-import android.view.Menu;
-import android.view.MenuItem;
-import android.view.MotionEvent;
-import android.view.View;
-import android.view.View.OnClickListener;
 import android.widget.ImageView;
-import android.util.Log;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 
@@ -30,17 +22,17 @@ public class Ball {
     // Speed of ball
     private int dx;
     private int dy;
-
+    //Used for portal
+    private BlueHole blueHole;
     //Used for the layout and image of ball
     private RelativeLayout rlayout;
     private ImageView ballImage;
-
-    private ImageView blueHole;
+    private Resources r;
 
     // Color of ball
     private Color ballColor;
 
-    public Ball(int x, int y, int dx, int dy, RelativeLayout rlayout, final ImageView image) {
+    public Ball(int x, int y, int dx, int dy, RelativeLayout rlayout, final ImageView image, BlueHole blueHole) {
         this.x = x;
         this.y = y;
         this.dx = dx;
@@ -48,20 +40,27 @@ public class Ball {
         this.rlayout = rlayout;
 
         this.ballImage = image;
+        this.blueHole = blueHole;
+
 
         // Chooses color of the ball
         Random rand = new Random();
         int color = rand.nextInt(4);
-        if (color == 0)
+        if (color == 0) {
             ballImage.setBackgroundResource(R.drawable.voredball);
+            ballImage.setTag("Red");
+        }
         else if (color == 1) {
             ballImage.setBackgroundResource(R.drawable.voblueball);
+            ballImage.setTag("Blue");
         }
         else if (color == 2) {
             ballImage.setBackgroundResource(R.drawable.vogreenball);
+            ballImage.setTag("Green");
         }
         else if (color == 3) {
             ballImage.setBackgroundResource(R.drawable.voblackball);
+            ballImage.setTag("Black");
         }
 
         LinearLayout.LayoutParams parms = new LinearLayout.LayoutParams(40,40);
@@ -75,9 +74,7 @@ public class Ball {
 
     public void render(float top, float bottom, float left, float right) {
 
-        checkCollision();
-
-        if (ballImage.getX() + getDx() < left || ballImage.getX() + getDx() + 40 > right) {
+        if (ballImage.getX() + getDx() < left || ballImage.getX() + getDx() + 60 > right) {
             setDx(-getDx());
         }
 
@@ -90,15 +87,14 @@ public class Ball {
         ballImage.setX((ballImage.getX() + getDx()));
         ballImage.setY((ballImage.getY() + getDy()));
 
-        checkCollision();
     }
 
     public int getDx() {
-        return dx;
+        return this.dx;
     }
 
     public int getDy() {
-        return dy;
+        return this.dy;
     }
 
     public void setDx(int dx) {
@@ -108,33 +104,27 @@ public class Ball {
     public void setDy(int dy) {
         this.dy = dy;
     }
+    //Return true if collison happens
+    public Object checkCollision() {
 
-    public void checkCollision() {
-
-//        System.out.println(ballImage.getTop() + " " + blueHole.getTop());
-////        System.out.println(ballImage.getBottom() + " " + blueHole.getBottom());
-////        System.out.println(ballImage.getLeft() + " " + blueHole.getLeft());
-////        System.out.println(ballImage.getRight() + " " + blueHole.getRight());
-//        if(ballImage.getLeft() < blueHole.getRight() && ballImage.getLeft() > blueHole.getLeft() && (
-//                ballImage.getTop() < blueHole.getTop() && ballImage.getTop() > blueHole.getBottom()
-//                || ballImage.getBottom() < blueHole.getTop() && ballImage.getBottom() > blueHole.getBottom())) {
-//            rlayout.removeView(ballImage);
-//        }
-//        if(ballImage.getRight() < blueHole.getRight() && ballImage.getRight() > blueHole.getLeft() && (
-//                ballImage.getTop() < blueHole.getTop() && ballImage.getTop() > blueHole.getBottom()
-//                || ballImage.getBottom() < blueHole.getTop() && ballImage.getBottom() > blueHole.getBottom())) {
-//            rlayout.removeView(ballImage);
-//        }
-//        if(ballImage.getTop() < blueHole.getTop() && ballImage.getTop() > blueHole.getBottom() && (
-//                ballImage.getLeft() < blueHole.getRight() && ballImage.getLeft() > blueHole.getLeft()
-//                || ballImage.getRight() < blueHole.getRight() && ballImage.getRight() > blueHole.getLeft())) {
-//            rlayout.removeView(ballImage);
-//        }
-//        if (ballImage.getBottom() < blueHole.getTop() && ballImage.getBottom() > blueHole.getBottom() && (
-//                ballImage.getLeft() < blueHole.getRight() && ballImage.getLeft() > blueHole.getLeft()
-//                || ballImage.getRight() < blueHole.getRight() && ballImage.getRight() > blueHole.getLeft())) {
-//            rlayout.removeView(ballImage);
-//        }
-
+        //Check if the ball's bottom is less than the blue hole's top  but greater than the bluehole's bottom
+        //If it is than check if ball's left side is less than the bluehole's right but greater than the bluehole's left
+        //Or check if ball's right side is less than the bluehole's right but greater than the bluehole's left side
+        if(ballImage.getY()+ 60 > blueHole.getTop() && ballImage.getY() + 60 < blueHole.getBottom()
+                && ( (ballImage.getX() < blueHole.getRight() && ballImage.getX() > blueHole.getLeft())
+                || ballImage.getX() + 60 < blueHole.getRight() && ballImage.getX() + 60 > blueHole.getLeft())) {
+            rlayout.removeView(ballImage);
+            return ballImage.getTag();
+        }
+        //Check if the ball's top is less than the bluehole's bottom but greater than the bluehole's top
+        //If it is check if the ball's left side is less t han the bluehole's right but greater than the bluehole's left
+        //Or check if ball's rightside is less than the bluehole's right but greater than the bluehole's left side
+        if(ballImage.getY() < blueHole.getBottom() && ballImage.getY() > blueHole.getTop()
+                && ( (ballImage.getX() < blueHole.getRight() && ballImage.getX() > blueHole.getLeft())
+                || ballImage.getX() + 60 < blueHole.getRight() && ballImage.getX() + 60 > blueHole.getLeft())) {
+            rlayout.removeView(ballImage);
+            return ballImage.getTag();
+        }
+        return null;
     }
 }
