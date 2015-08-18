@@ -116,7 +116,6 @@ public class Ball {
         if(ballImage.getY()+ 60 > blueHole.getTop() && ballImage.getY() + 60 < blueHole.getBottom()
                 && ( (ballImage.getX() < blueHole.getRight() && ballImage.getX() > blueHole.getLeft())
                 || ballImage.getX() + 60 < blueHole.getRight() && ballImage.getX() + 60 > blueHole.getLeft())) {
-            rlayout.removeView(ballImage);
             return ballImage.getTag();
         }
         //Check if the ball's top is less than the bluehole's bottom but greater than the bluehole's top
@@ -125,9 +124,12 @@ public class Ball {
         if(ballImage.getY() < blueHole.getBottom() && ballImage.getY() > blueHole.getTop()
                 && ( (ballImage.getX() < blueHole.getRight() && ballImage.getX() > blueHole.getLeft())
                 || ballImage.getX() + 60 < blueHole.getRight() && ballImage.getX() + 60 > blueHole.getLeft())) {
-            rlayout.removeView(ballImage);
             return ballImage.getTag();
         }
         return null;
+    }
+
+    public void removeView() {
+        rlayout.removeView(ballImage);
     }
 }

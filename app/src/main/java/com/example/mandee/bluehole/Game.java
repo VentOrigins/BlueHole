@@ -30,18 +30,13 @@ public class Game {
     //Score bar
     private TextView scoreBar;
 
+    private boolean isGameOver = false;
 
-    public Game() {
-        // bluePortal = new BluePortal();
-        this.listOfBalls = new ArrayList<Ball>();
-        this.screenTop = 0;
-        this.screenBottom = 0;
-        this.screenLeft = 0;
-        this.screenRight = 0;
+    private int score;
+
+    private RelativeLayout rlayout;
 
 
-
-    }
 
     public Game(float top, float bottom, float left, float right, BlueHole blueHole, ImageView nextBall, TextView textBar, TextView scoreBar) {
         // bluePortal = new BluePortal();
@@ -62,13 +57,12 @@ public class Game {
 
 
     public void render() {
-        // Moves the portal
-
         //Moves each ball
         for (int i = 0; i < listOfBalls.size(); ++i) {
 
             if(listOfBalls.get(i).checkCollision() != null){
                 if(nextBall.getTag().equals(listOfBalls.get(i).checkCollision())) {
+                    listOfBalls.get(i).removeView();
                     listOfBalls.remove(i);
                     changeBall();
                 } else {
@@ -80,6 +74,7 @@ public class Game {
                 listOfBalls.get(i).render(screenTop, screenBottom, screenLeft, screenRight);
                 if(listOfBalls.get(i).checkCollision() != null){
                     if(nextBall.getTag().equals(listOfBalls.get(i).checkCollision())) {
+                        listOfBalls.get(i).removeView();
                         listOfBalls.remove(i);
                         changeBall();
                     } else {
@@ -94,7 +89,6 @@ public class Game {
     }
 
     public void addBallToBallList(RelativeLayout rlayout, ImageView ballImage) {
-
 
         int startingBallPosX = rand.nextInt( Math.round(screenRight - screenLeft) - 100) + Math.round(screenLeft - 5);
         int startingBallPosY = Math.round(screenTop-2);
@@ -127,32 +121,35 @@ public class Game {
 
     private void changeBall() {
 
-        int score = Integer.parseInt(scoreBar.getText().toString());
+        score = Integer.parseInt(scoreBar.getText().subSequence(7, scoreBar.getText().length()).toString());
         score++;
-        scoreBar.setText(Integer.toString(score));
+        scoreBar.setText("Score: " + Integer.toString(score));
         int color = rand.nextInt(4);
         if (color == 0) {
-            nextBall.setBackgroundResource(R.drawable.voredball);
+            nextBall.setImageResource(R.drawable.voredball);
             nextBall.setTag("Red");
         }
         else if (color == 1) {
-            nextBall.setBackgroundResource(R.drawable.voblueball);
+            nextBall.setImageResource(R.drawable.voblueball);
             nextBall.setTag("Blue");
         }
         else if (color == 2) {
-            nextBall.setBackgroundResource(R.drawable.vogreenball);
+            nextBall.setImageResource(R.drawable.vogreenball);
             nextBall.setTag("Green");
         }
         else if (color == 3) {
-            nextBall.setBackgroundResource(R.drawable.voblackball);
+            nextBall.setImageResource(R.drawable.voblackball);
             nextBall.setTag("Black");
         }
 
     }
 
     private void gameOver() {
+
         nextBall.setImageDrawable(null);
         textBar.setText("Game Over");
+        isGameOver = true;
+
     }
 
     public void printAllBalls() {
@@ -162,4 +159,31 @@ public class Game {
         }
         System.out.print("\n");
     }
+
+    public boolean isGameOver() {
+        return isGameOver;
+    }
+
+    public String getScore() {
+        return Integer.toString(score);
+    }
+
+    public void restart() {
+
+        for (int i = 0; i < listOfBalls.size(); ++i) {
+            listOfBalls.get(i).removeView();
+        }
+        listOfBalls.clear();
+
+
+        nextBall.setImageResource(R.drawable.voredball);
+        nextBall.setTag("Red");
+
+        textBar.setText(null);
+        scoreBar.setText("Score: 0");
+
+        isGameOver = false;
+
+    }
+
 }

@@ -1,5 +1,7 @@
 package com.example.mandee.bluehole;
 
+import android.content.Context;
+import android.content.SharedPreferences;
 import android.content.res.Resources;
 import android.os.Handler;
 import android.support.v7.app.ActionBarActivity;
@@ -9,6 +11,8 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.MotionEvent;
 import android.view.View;
+import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
@@ -30,20 +34,32 @@ public class BlueHoleMain extends ActionBarActivity {
 
 
 
-    boolean ifPaused = false;
-    Game game;
-    boolean ifFirstTimeRunning = true;
+    private boolean ifPaused = false;
+    private Game game;
+    private boolean ifFirstTimeRunning = true;
+    private TextView textBar;
+    private TextView scoreBar;
+
+    private Runnable ballSpawn;
+    private Runnable ballRender;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_blue_hole_main);
+        createRunnables();
+
     }
 
     @Override
     public void onPause() {
         super.onPause();
+        System.out.println("Paused");
         ifPaused = true;
+        h.removeCallbacks(ballRender);
+        h.removeCallbacks(ballSpawn);
+
     }
 
     @Override
@@ -56,13 +72,18 @@ public class BlueHoleMain extends ActionBarActivity {
     public void onWindowFocusChanged(boolean hasFocus) {
         super.onWindowFocusChanged(hasFocus);
         if (hasFocus && ifFirstTimeRunning) {
+            System.out.println(ifFirstTimeRunning + " ifFistTimeRunning");
             ifFirstTimeRunning = false;
             createBlueHole();
             onBlueHoleTouch();
+
             game = gameInit();
         }
-            ballSpawnTick(game);
-            ballRenderTick(game);
+        if(!game.isGameOver()) {
+            ballSpawnTick();
+            ballRenderTick();
+        }
+
     }
 
     public void createBlueHole() {
@@ -83,15 +104,19 @@ public class BlueHoleMain extends ActionBarActivity {
         rlayout.setOnTouchListener(new View.OnTouchListener() {
             @Override
             public boolean onTouch(View v, MotionEvent event) {
-                float px = TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP,16, r.getDisplayMetrics());
+                if(game.isGameOver()){
+                    return false;
+                }
+                float px = TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 16, r.getDisplayMetrics());
                 int top = gameLayout.getTop() + Math.round(px);
                 int bottom = gameLayout.getBottom() - Math.round(px);
                 int left = gameLayout.getLeft() + Math.round(px);
                 int right = gameLayout.getRight() - Math.round(px);
                 ImageView imageBH = (ImageView) findViewById(R.id.bluehole);
-                int x = imageBH.getWidth()/2;
-                int y = imageBH.getHeight()/2;
-                if(event.getX() < left || event.getX() > right || event.getY() < top || event.getY() > bottom) {
+                int x = imageBH.getWidth() / 2;
+                int y = imageBH.getHeight() / 2;
+
+                if (event.getX() < left || event.getX() > right || event.getY() < top || event.getY() > bottom) {
                     return false;
                 }
                 blueHole.setX((int) event.getX() - x);
@@ -109,8 +134,8 @@ public class BlueHoleMain extends ActionBarActivity {
         float left = gameLayout.getLeft() + px;
         float right = gameLayout.getRight() - px;
 
-        TextView textBar = (TextView) findViewById(R.id.textBar);
-        TextView scoreBar = (TextView) findViewById(R.id.scoreBar);
+        textBar = (TextView) findViewById(R.id.textBar);
+        scoreBar = (TextView) findViewById(R.id.scoreBar);
 
 
         // Initializes the game
@@ -120,32 +145,17 @@ public class BlueHoleMain extends ActionBarActivity {
         return game;
     }
 
-    public void ballSpawnTick(final Game game) {
+    public void ballSpawnTick() {
         // Every time 5 seconds, call this
-        h.postDelayed(new Runnable() {
 
-
-            public void run() {
-                if (!ifPaused) {
-                    ImageView ballImage = new ImageView(BlueHoleMain.this);
-                    game.addBallToBallList(rlayout, ballImage);
-//                    game.printAllBalls();
-                    h.postDelayed(this, ballSpawnSpeed);
-                }
-            }
-        }, ballSpawnSpeed);
+        h.postDelayed(ballSpawn, ballSpawnSpeed);
     }
 
-    public void ballRenderTick(final Game game) {
+    public void ballRenderTick() {
         // Every 50 milliseconds, call this
-        h.postDelayed(new Runnable() {
-            public void run() {
-                if (!ifPaused) {
-                    game.render();
-                    h.postDelayed(this, ballMovementSpeed);
-                }
-            }
-        }, ballMovementSpeed);
+
+
+        h.postDelayed(ballRender, ballMovementSpeed);
     }
 
     @Override
@@ -163,5 +173,80 @@ public class BlueHoleMain extends ActionBarActivity {
 
 
         return super.onOptionsItemSelected(item);
+    }
+
+    public void restartGame(View view) {
+
+        game.restart();
+
+        TextView highScore = (TextView) findViewById(R.id.highScore);
+        Button restart = (Button) findViewById(R.id.restartButton);
+        highScore.setVisibility(View.INVISIBLE);
+        restart.setVisibility(View.INVISIBLE);
+
+
+        ballSpawnTick();
+        ballRenderTick();
+
+        blueHole.reset();
+
+    }
+
+    private void createRunnables() {
+
+        ballSpawn = new Runnable() {
+            public void run() {
+                if (!ifPaused && !game.isGameOver()) {
+                    ImageView ballImage = new ImageView(BlueHoleMain.this);
+                    game.addBallToBallList(rlayout, ballImage);
+//                    game.printAllBalls();
+                    h.postDelayed(this, ballSpawnSpeed);
+                }
+
+            }
+        };
+
+        ballRender  = new Runnable() {
+            public void run() {
+                if (!ifPaused && !game.isGameOver()) {
+                    game.render();
+                    if(game.isGameOver()) {
+                        gameOver();
+                    }
+                    h.postDelayed(this, ballMovementSpeed);
+                }
+
+            }
+        };
+
+    }
+
+    private void gameOver() {
+
+
+        SharedPreferences prefs = this.getSharedPreferences("myHighScore", Context.MODE_PRIVATE);
+        int score = prefs.getInt("highScore", 0); //0 is the default value
+        //If stored highScore is lower than gameHigh score commit new highScore and
+        //Store new high score into score
+        if(score < Integer.parseInt(game.getScore())){
+            SharedPreferences.Editor editor = prefs.edit();
+            editor.putInt("highScore", Integer.parseInt(game.getScore()));
+            editor.commit();
+            score = Integer.parseInt(game.getScore());
+        }
+
+        TextView highScore = (TextView) findViewById(R.id.highScore);
+        Button restart = (Button) findViewById(R.id.restartButton);
+
+        highScore.setVisibility(View.VISIBLE);
+        highScore.bringToFront();
+        restart.setVisibility(View.VISIBLE);
+        restart.bringToFront();
+
+        highScore.setText("High Score: " + Integer.toString(score));
+
+
+        h.removeCallbacks(ballSpawn);
+        h.removeCallbacks(ballRender);
     }
 }

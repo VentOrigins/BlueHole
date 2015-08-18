@@ -34,7 +34,7 @@
             android:layout_height="25dp"
             android:layout_marginLeft="25dp"
             android:id="@+id/scoreBar"
-            android:text="0"
+            android:text="Score: 0"
             android:layout_toRightOf="@+id/nextBall"
             android:textSize="20dp"
             android:textColor="#000000"
@@ -59,7 +59,35 @@
 
 
 
+
     </RelativeLayout>
+
+    <TextView
+        android:layout_width="200dp"
+        android:layout_height="50dp"
+        android:layout_centerHorizontal="true"
+        android:layout_centerVertical="true"
+        android:layout_below="@id/bar"
+        android:layout_marginTop="100dp"
+        android:id="@+id/highScore"
+        android:text=""
+        android:textSize="20dp"
+        android:textAlignment="center"
+        android:gravity="center"
+        android:textColor="#000000"
+        android:visibility="invisible"
+
+        />
+    <Button
+        android:layout_width="100dp"
+        android:layout_height="100dp"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="20dp"
+        android:layout_below="@+id/highScore"
+        android:id="@+id/restartButton"
+        android:text="Restart"
+        android:visibility="invisible"
+        android:onClick="restartGame"/>
 
     <ImageView
         android:layout_width="30dp"
