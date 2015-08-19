@@ -94,6 +94,8 @@
         android:layout_height="30dp"
         android:id="@+id/bluehole"
         android:src="@drawable/portal"
+        android:scaleType="fitXY"
+        android:adjustViewBounds="true"
         android:layout_centerHorizontal="true"
         android:layout_centerVertical="true"
         />
