@@ -20,8 +20,15 @@ public class BlueHole {
         this.bhHeight = bhHeight;
         startX = blueHole.getX();
         startY = blueHole.getY();
+    }
 
-
+    public void render() {
+        float angle = blueHole.getRotation();
+        angle += 10.0f;
+        if(angle >= 360.0f) {
+            angle = 0;
+        }
+        blueHole.setRotation(angle);
     }
 
     public void setX(float xPos) {
@@ -45,6 +52,10 @@ public class BlueHole {
 
     public float getRight() {
         return this.blueHole.getX()+ this.bhWidth;
+    }
+
+    public ImageView getImage() {
+        return blueHole;
     }
 
     public void reset() {

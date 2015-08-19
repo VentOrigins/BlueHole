@@ -57,6 +57,9 @@ public class Game {
 
 
     public void render() {
+        //Moves the portal accordingly
+        this.blueHole.render();
+
         //Moves each ball
         for (int i = 0; i < listOfBalls.size(); ++i) {
 

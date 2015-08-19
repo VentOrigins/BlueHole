@@ -12,14 +12,10 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.MotionEvent;
 import android.view.View;
-import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
-
-import java.util.Random;
-
 
 public class BlueHoleMain extends ActionBarActivity {
     Handler h = new Handler();
@@ -32,8 +28,6 @@ public class BlueHoleMain extends ActionBarActivity {
     private RelativeLayout gameLayout;
     private RelativeLayout rlayout;
     private ImageView nextBall;
-
-
 
     private boolean ifPaused = false;
     private Game game;
@@ -53,8 +47,6 @@ public class BlueHoleMain extends ActionBarActivity {
         setContentView(R.layout.activity_blue_hole_main);
         thisContext = this;
         createRunnables();
-
-
     }
 
     @Override
@@ -64,7 +56,6 @@ public class BlueHoleMain extends ActionBarActivity {
         ifPaused = true;
         h.removeCallbacks(ballRender);
         h.removeCallbacks(ballSpawn);
-
     }
 
     @Override
@@ -88,7 +79,6 @@ public class BlueHoleMain extends ActionBarActivity {
             ballSpawnTick();
             ballRenderTick();
         }
-
     }
 
     public void createBlueHole() {
@@ -117,6 +107,7 @@ public class BlueHoleMain extends ActionBarActivity {
                 int bottom = gameLayout.getBottom() - Math.round(px);
                 int left = gameLayout.getLeft() + Math.round(px);
                 int right = gameLayout.getRight() - Math.round(px);
+
                 ImageView imageBH = (ImageView) findViewById(R.id.bluehole);
                 int x = imageBH.getWidth() / 2;
                 int y = imageBH.getHeight() / 2;
@@ -124,8 +115,9 @@ public class BlueHoleMain extends ActionBarActivity {
                 if (event.getX() < left || event.getX() > right || event.getY() < top || event.getY() > bottom) {
                     return false;
                 }
-                blueHole.setX((int) event.getX() - x);
-                blueHole.setY((int) event.getY() - y);
+                imageBH.setX((int) event.getX() - x);
+                imageBH.setY((int) event.getY() - y);
+
                 return false;
             }
         });
@@ -142,24 +134,19 @@ public class BlueHoleMain extends ActionBarActivity {
         textBar = (TextView) findViewById(R.id.textBar);
         scoreBar = (TextView) findViewById(R.id.scoreBar);
 
-
         // Initializes the game
         final Game game = new Game(top, bottom, left, right, blueHole, nextBall, textBar, scoreBar);
-
 
         return game;
     }
 
     public void ballSpawnTick() {
         // Every time 5 seconds, call this
-
         h.postDelayed(ballSpawn, ballSpawnSpeed);
     }
 
     public void ballRenderTick() {
         // Every 50 milliseconds, call this
-
-
         h.postDelayed(ballRender, ballMovementSpeed);
     }
 
@@ -205,7 +192,7 @@ public class BlueHoleMain extends ActionBarActivity {
                 if (!ifPaused && !game.isGameOver()) {
                     ImageView ballImage = new ImageView(BlueHoleMain.this);
                     game.addBallToBallList(rlayout, ballImage);
-                    game.addBlackToBallList(rlayout, ballImage);
+//                    game.addBlackToBallList(rlayout, ballImage);
 //                    game.printAllBalls();
                     h.postDelayed(this, ballSpawnSpeed);
                 }
