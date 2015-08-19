@@ -101,9 +101,27 @@ public class Game {
         int changeOfBallPosX = rand.nextInt(21) - 10;
         int changeOfBallPosY = rand.nextInt(11) + 1;
 
-        Ball ball = new Ball(startingBallPosX, startingBallPosY, changeOfBallPosX, changeOfBallPosY, rlayout, ballImage, blueHole);
+        Ball ball = new Ball(startingBallPosX, startingBallPosY, changeOfBallPosX, changeOfBallPosY, rlayout, ballImage, blueHole, false);
         listOfBalls.add(ball);
     }
+
+    public void addBlackToBallList(RelativeLayout rlayout, ImageView ballImage) {
+
+        int startingBallPosX = rand.nextInt( Math.round(screenRight - screenLeft) - 100) + Math.round(screenLeft - 5);
+        int startingBallPosY = Math.round(screenTop-2);
+//        int changeOfBallPosX = rand.nextInt(41) - 20;
+//        int changeOfBallPosY = rand.nextInt(21) + 1;
+
+        int changeOfBallPosX = rand.nextInt(21) - 10;
+        int changeOfBallPosY = rand.nextInt(11) + 1;
+
+        Ball ball = new Ball(startingBallPosX, startingBallPosY, changeOfBallPosX, changeOfBallPosY, rlayout, ballImage, blueHole, true);
+        listOfBalls.add(ball);
+    }
+
+
+
+
 
     public float getTop() {
         return screenTop;
@@ -188,5 +206,17 @@ public class Game {
         isGameOver = false;
 
     }
+
+    public void endGame() {
+        for (int i = 0; i < listOfBalls.size(); ++i) {
+            listOfBalls.get(i).removeView();
+        }
+        listOfBalls.clear();
+
+
+        isGameOver = false;
+
+    }
+
 
 }

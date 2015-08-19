@@ -29,7 +29,6 @@ public class BlueHole {
             angle = 0;
         }
         blueHole.setRotation(angle);
-        System.out.println(angle);
     }
 
     public void setX(float xPos) {
