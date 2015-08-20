@@ -117,9 +117,9 @@ public class Ball {
         //Check if the ball's bottom is less than the blue hole's top  but greater than the bluehole's bottom
         //If it is than check if ball's left side is less than the bluehole's right but greater than the bluehole's left
         //Or check if ball's right side is less than the bluehole's right but greater than the bluehole's left side
-        if(ballImage.getY()+ 60 > blueHole.getTop() && ballImage.getY() + 60 < blueHole.getBottom()
+        if(ballImage.getY()+ 30 > blueHole.getTop() && ballImage.getY() + 30 < blueHole.getBottom()
                 && ( (ballImage.getX() < blueHole.getRight() && ballImage.getX() > blueHole.getLeft())
-                || ballImage.getX() + 60 < blueHole.getRight() && ballImage.getX() + 60 > blueHole.getLeft())) {
+                || ballImage.getX() + 30 < blueHole.getRight() && ballImage.getX() + 30 > blueHole.getLeft())) {
             return ballImage.getTag();
         }
         //Check if the ball's top is less than the bluehole's bottom but greater than the bluehole's top
@@ -127,7 +127,7 @@ public class Ball {
         //Or check if ball's rightside is less than the bluehole's right but greater than the bluehole's left side
         if(ballImage.getY() < blueHole.getBottom() && ballImage.getY() > blueHole.getTop()
                 && ( (ballImage.getX() < blueHole.getRight() && ballImage.getX() > blueHole.getLeft())
-                || ballImage.getX() + 60 < blueHole.getRight() && ballImage.getX() + 60 > blueHole.getLeft())) {
+                || ballImage.getX() + 30 < blueHole.getRight() && ballImage.getX() + 30 > blueHole.getLeft())) {
             return ballImage.getTag();
         }
         return null;
