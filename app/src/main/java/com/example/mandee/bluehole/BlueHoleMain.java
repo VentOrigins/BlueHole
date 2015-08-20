@@ -20,8 +20,7 @@ import android.widget.TextView;
 public class BlueHoleMain extends ActionBarActivity {
     Handler h = new Handler();
 
-    int ballSpawnSpeed = 5000; //milliseconds
-    int ballMovementSpeed = 10;
+
 
     private BlueHole blueHole;
     private Resources r;
@@ -34,10 +33,12 @@ public class BlueHoleMain extends ActionBarActivity {
     private boolean ifFirstTimeRunning = true;
     private TextView textBar;
     private TextView scoreBar;
+    private ImageView ballImage;
 
     private Runnable ballSpawn;
     private Runnable ballRender;
     private Runnable gameOver;
+
     private Context thisContext;
 
 
@@ -46,7 +47,7 @@ public class BlueHoleMain extends ActionBarActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_blue_hole_main);
         thisContext = this;
-        createRunnables();
+
     }
 
     @Override
@@ -68,16 +69,18 @@ public class BlueHoleMain extends ActionBarActivity {
     public void onWindowFocusChanged(boolean hasFocus) {
         super.onWindowFocusChanged(hasFocus);
         if (hasFocus && ifFirstTimeRunning) {
-            System.out.println(ifFirstTimeRunning + " ifFistTimeRunning");
-            ifFirstTimeRunning = false;
             createBlueHole();
             onBlueHoleTouch();
+            ifFirstTimeRunning = false;
 
             game = gameInit();
+            createRunnables();
+
+            blackBallSpawn();
         }
         if(!game.isGameOver()) {
-            ballSpawnTick();
-            ballRenderTick();
+            ballSpawnTick(2000);
+            ballRenderTick(2000);
         }
     }
 
@@ -99,7 +102,7 @@ public class BlueHoleMain extends ActionBarActivity {
         rlayout.setOnTouchListener(new View.OnTouchListener() {
             @Override
             public boolean onTouch(View v, MotionEvent event) {
-                if(game.isGameOver()){
+                if (game.isGameOver()) {
                     return false;
                 }
                 float px = TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 16, r.getDisplayMetrics());
@@ -133,38 +136,31 @@ public class BlueHoleMain extends ActionBarActivity {
 
         textBar = (TextView) findViewById(R.id.textBar);
         scoreBar = (TextView) findViewById(R.id.scoreBar);
+        ballImage = new ImageView(BlueHoleMain.this);
 
         // Initializes the game
-        final Game game = new Game(top, bottom, left, right, blueHole, nextBall, textBar, scoreBar);
+        final Game game = new Game(top, bottom, left, right, blueHole, nextBall, textBar, scoreBar, rlayout, this);
 
         return game;
     }
 
-    public void ballSpawnTick() {
+    public void ballSpawnTick(int seconds) {
         // Every time 5 seconds, call this
-        h.postDelayed(ballSpawn, ballSpawnSpeed);
+        h.postDelayed(ballSpawn, seconds);
     }
 
-    public void ballRenderTick() {
+    public void ballRenderTick(int seconds) {
         // Every 50 milliseconds, call this
-        h.postDelayed(ballRender, ballMovementSpeed);
+        h.postDelayed(ballRender, seconds);
     }
 
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        // Inflate the menu; this adds items to the action bar if it is present.
-        return true;
+    private void blackBallSpawn() {
+        for(int i = 0; i < 3; i++) {
+            game.addBlackToBallList(true);
+        }
+
     }
 
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        // Handle action bar item clicks here. The action bar will
-        // automatically handle clicks on the Home/Up button, so long
-        // as you specify a parent activity in AndroidManifest.xml.
-
-
-        return super.onOptionsItemSelected(item);
-    }
 
     public void restartGame(View view) {
 
@@ -177,28 +173,28 @@ public class BlueHoleMain extends ActionBarActivity {
         restart.setVisibility(View.INVISIBLE);
         mainMenu.setVisibility(View.INVISIBLE);
 
-
-        ballSpawnTick();
-        ballRenderTick();
+        blackBallSpawn();
+        ballSpawnTick(2000);
+        ballRenderTick(2000);
 
         blueHole.reset();
 
     }
+
 
     private void createRunnables() {
 
         ballSpawn = new Runnable() {
             public void run() {
                 if (!ifPaused && !game.isGameOver()) {
-                    ImageView ballImage = new ImageView(BlueHoleMain.this);
-                    game.addBallToBallList(rlayout, ballImage);
-//                    game.addBlackToBallList(rlayout, ballImage);
-//                    game.printAllBalls();
-                    h.postDelayed(this, ballSpawnSpeed);
+                    game.addBallToBallList();
+                    h.postDelayed(this, game.getBallSpawnSpeed());
                 }
 
             }
         };
+
+
 
         ballRender  = new Runnable() {
             public void run() {
@@ -207,7 +203,7 @@ public class BlueHoleMain extends ActionBarActivity {
                     if(game.isGameOver()) {
                         gameOver();
                     }
-                    h.postDelayed(this, ballMovementSpeed);
+                    h.postDelayed(this, game.getBallMovementSpeed());
                 }
 
             }
@@ -245,8 +241,6 @@ public class BlueHoleMain extends ActionBarActivity {
 
     private void gameOver() {
 
-
-
         h.postDelayed(gameOver, 100);
 
         h.removeCallbacks(ballSpawn);
@@ -260,4 +254,21 @@ public class BlueHoleMain extends ActionBarActivity {
         Intent intent = new Intent(this, MainMenu.class);
         startActivity(intent);
     }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        // Inflate the menu; this adds items to the action bar if it is present.
+        return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        // Handle action bar item clicks here. The action bar will
+        // automatically handle clicks on the Home/Up button, so long
+        // as you specify a parent activity in AndroidManifest.xml.
+
+
+        return super.onOptionsItemSelected(item);
+    }
+
 }

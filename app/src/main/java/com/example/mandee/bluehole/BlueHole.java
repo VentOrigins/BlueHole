@@ -64,4 +64,18 @@ public class BlueHole {
         blueHole.setY(startY);
 
     }
+
+    public float getRadius() {
+        return bhWidth / 2;
+
+    }
+
+
+    public float getCenterX() {
+        return this.blueHole.getX() + (bhWidth/2);
+    }
+
+    public float getCenterY() {
+        return this.blueHole.getY() + (bhHeight/2);
+    }
 }
