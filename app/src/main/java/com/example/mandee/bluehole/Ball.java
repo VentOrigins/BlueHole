@@ -49,28 +49,24 @@ public class Ball {
         Random rand = new Random();
 
         int color = rand.nextInt(3);
-        if(isBlack) {
+        if (isBlack) {
             ballImage.setBackgroundResource(R.drawable.voblackball);
             ballImage.setTag("Black");
-        }
-        else {
-            if (color == 0){
+        } else {
+            if (color == 0) {
                 ballImage.setBackgroundResource(R.drawable.voredball);
                 ballImage.setTag("Red");
-            }
-            else if (color == 1) {
+            } else if (color == 1) {
                 ballImage.setBackgroundResource(R.drawable.voblueball);
                 ballImage.setTag("Blue");
-            }
-            else if (color == 2) {
+            } else if (color == 2) {
                 ballImage.setBackgroundResource(R.drawable.vogreenball);
                 ballImage.setTag("Green");
             }
         }
 
 
-
-        LinearLayout.LayoutParams parms = new LinearLayout.LayoutParams(40,40);
+        LinearLayout.LayoutParams parms = new LinearLayout.LayoutParams(60, 60);
         ballImage.setLayoutParams(parms);
         ballImage.requestLayout();
         ballImage.setX(x);
@@ -85,14 +81,15 @@ public class Ball {
             setDx(-getDx());
         }
 
-        if(getDy() < 0 && ballImage.getY() + getDy() < top) {
+        if (getDy() < 0 && ballImage.getY() + getDy() < top) {
             setDy(-getDy());
         }
-        if(getDy() > 0 && ballImage.getY() + getDy() + 40 > bottom) {
+        if (getDy() > 0 && ballImage.getY() + getDy() + 40 > bottom) {
             setDy(-getDy());
         }
         ballImage.setX((ballImage.getX() + getDx()));
         ballImage.setY((ballImage.getY() + getDy()));
+
 
     }
 
@@ -111,25 +108,47 @@ public class Ball {
     public void setDy(int dy) {
         this.dy = dy;
     }
+
+    public float getRadius() {
+        return 30;
+    }
+
+    public float getTop() {
+        return ballImage.getY();
+    }
+
+    public float getBottom() {
+        return ballImage.getY() + 60;
+    }
+
+    public float getLeft() {
+        return ballImage.getX();
+    }
+
+    public float getRight() {
+        return ballImage.getX() + 60;
+    }
+
+    public float getCenterX() {
+        return ballImage.getX() + 30;
+    }
+
+    public float getCenterY() {
+        return ballImage.getY() + 30;
+    }
+
     //Return true if collison happens
     public Object checkCollision() {
 
-        //Check if the ball's bottom is less than the blue hole's top  but greater than the bluehole's bottom
-        //If it is than check if ball's left side is less than the bluehole's right but greater than the bluehole's left
-        //Or check if ball's right side is less than the bluehole's right but greater than the bluehole's left side
-        if(ballImage.getY()+ 60 > blueHole.getTop() && ballImage.getY() + 60 < blueHole.getBottom()
-                && ( (ballImage.getX() < blueHole.getRight() && ballImage.getX() > blueHole.getLeft())
-                || ballImage.getX() + 60 < blueHole.getRight() && ballImage.getX() + 60 > blueHole.getLeft())) {
+        float combinedRadius = getRadius() + blueHole.getRadius();
+        double xDis = Math.pow(blueHole.getCenterX() - getCenterX(),2);
+        double yDis = Math.pow(blueHole.getCenterY() - getCenterY(),2);
+        double distanceBetweenBoth = Math.sqrt((xDis+yDis));
+
+        if(distanceBetweenBoth < combinedRadius) {
             return ballImage.getTag();
         }
-        //Check if the ball's top is less than the bluehole's bottom but greater than the bluehole's top
-        //If it is check if the ball's left side is less t han the bluehole's right but greater than the bluehole's left
-        //Or check if ball's rightside is less than the bluehole's right but greater than the bluehole's left side
-        if(ballImage.getY() < blueHole.getBottom() && ballImage.getY() > blueHole.getTop()
-                && ( (ballImage.getX() < blueHole.getRight() && ballImage.getX() > blueHole.getLeft())
-                || ballImage.getX() + 60 < blueHole.getRight() && ballImage.getX() + 60 > blueHole.getLeft())) {
-            return ballImage.getTag();
-        }
+
         return null;
     }
 
