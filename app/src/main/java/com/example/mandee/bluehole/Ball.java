@@ -40,19 +40,19 @@ public class Ball {
         this.dx = dx;
         this.dy = dy;
         this.rlayout = rlayout;
-
         this.ballImage = image;
         this.blueHole = blueHole;
-
 
         // Chooses color of the ball
         Random rand = new Random();
 
+        // Sets the color of the balls
         int color = rand.nextInt(3);
         if (isBlack) {
             ballImage.setBackgroundResource(R.drawable.voblackball);
             ballImage.setTag("Black");
-        } else {
+        }
+        else {
             if (color == 0) {
                 ballImage.setBackgroundResource(R.drawable.voredball);
                 ballImage.setTag("Red");
@@ -65,7 +65,7 @@ public class Ball {
             }
         }
 
-
+        // Sets the position of the ball
         LinearLayout.LayoutParams parms = new LinearLayout.LayoutParams(30, 30);
         ballImage.setLayoutParams(parms);
         ballImage.requestLayout();
@@ -75,8 +75,14 @@ public class Ball {
         rlayout.addView(ballImage);
     }
 
-    public void render(float top, float bottom, float left, float right) {
+    /*  =============================================================================
+    Moves the ball every time the ballRender is ticked, When a ball hits a border, depending
+    on the side the ball hits, well change the direction of ball.
 
+    @param      floats      The values of the border in the game
+    @return     none
+    ========================================================================== */
+    public void render(float top, float bottom, float left, float right) {
         if (ballImage.getX() + getDx() < left || ballImage.getX() + getDx() + 30 > right) {
             setDx(-getDx());
         }
@@ -88,8 +94,40 @@ public class Ball {
         }
         ballImage.setX((ballImage.getX() + getDx()));
         ballImage.setY((ballImage.getY() + getDy()));
+    }
 
+    /*  =============================================================================
+        Checks if a ball collided with the blue portal or not.
+        Does this by checking distance of center of ball to center of portal.
+        If the distance between those two points are less than the combined radius
+        of the portal and ball, then they have collided
 
+        @param      none
+        @return     Object      Returns the ball's color, null if no ball collided
+        ========================================================================== */
+    public Object checkCollision() {
+        float combinedRadius = getRadius() + blueHole.getRadius();
+
+        if(distanceOfBallToPortal() < combinedRadius) {
+            return ballImage.getTag();
+        }
+        return null;
+    }
+
+    /*  =============================================================================
+    Calculates the distance of the center of the blue portal to the current ball
+
+    @param      none
+    @return     double  Value of distance of ball
+    ========================================================================== */
+    public double distanceOfBallToPortal() {
+        double xDis = Math.pow(blueHole.getCenterX() - getCenterX(),2);
+        double yDis = Math.pow(blueHole.getCenterY() - getCenterY(),2);
+        return Math.sqrt((xDis+yDis));
+    }
+
+    public void removeView() {
+        rlayout.removeView(ballImage);
     }
 
     public int getDx() {
@@ -108,10 +146,6 @@ public class Ball {
         this.dy = dy;
     }
 
-    public float getRadius() {
-        return 15;
-    }
-
     public float getTop() {
         return ballImage.getY();
     }
@@ -128,28 +162,15 @@ public class Ball {
         return ballImage.getX() + 60;
     }
 
+    public float getRadius() {
+        return 15;
+    }
+
     public float getCenterX() {
         return ballImage.getX() + 15;
     }
 
     public float getCenterY() {
         return ballImage.getY() + 15;
-    }
-
-    //Return true if collison happens
-    public Object checkCollision() {
-        float combinedRadius = getRadius() + blueHole.getRadius();
-        double xDis = Math.pow(blueHole.getCenterX() - getCenterX(),2);
-        double yDis = Math.pow(blueHole.getCenterY() - getCenterY(),2);
-        double distanceBetweenBoth = Math.sqrt((xDis+yDis));
-
-        if(distanceBetweenBoth < combinedRadius) {
-            return ballImage.getTag();
-        }
-        return null;
-    }
-
-    public void removeView() {
-        rlayout.removeView(ballImage);
     }
 }
