@@ -8,6 +8,7 @@ import android.widget.RelativeLayout;
  */
 public class BlueHole {
 
+    // Set variables of how the image is of the blue portal
     private ImageView blueHole;
     private float bhWidth;
     private float bhHeight;
@@ -22,13 +23,37 @@ public class BlueHole {
         startY = blueHole.getY();
     }
 
+    /*  =============================================================================
+    Rendering is called every time the runnable ticks for the ballRender
+
+    @param      none
+    @return     none
+    ========================================================================== */
     public void render() {
+        // Resizes the blue portal when it spawns
+        if (blueHole.getScaleX() < 1.0f && blueHole.getScaleY() < 1.0f) {
+            blueHole.setScaleX(blueHole.getScaleX() + 0.2f);
+            blueHole.setScaleY(blueHole.getScaleY() + 0.2f);
+        }
+
+        // Continues to rotate the blue portal
         float angle = blueHole.getRotation();
         angle += 10.0f;
         if(angle >= 360.0f) {
             angle = 0;
         }
         blueHole.setRotation(angle);
+    }
+
+    /*  =============================================================================
+    Resets the blue portal's beginning position when game restarts
+
+    @param      none
+    @return     none
+    ========================================================================== */
+    public void reset() {
+        blueHole.setX(startX);
+        blueHole.setY(startY);
     }
 
     public void setX(float xPos) {
@@ -38,6 +63,7 @@ public class BlueHole {
     public void setY(float yPos) {
         this.blueHole.setY(yPos);
     }
+
     public float getTop() {
         return this.blueHole.getY();
     }
@@ -58,18 +84,9 @@ public class BlueHole {
         return blueHole;
     }
 
-    public void reset() {
-
-        blueHole.setX(startX);
-        blueHole.setY(startY);
-
-    }
-
     public float getRadius() {
         return bhWidth / 2;
-
     }
-
 
     public float getCenterX() {
         return this.blueHole.getX() + (bhWidth/2);

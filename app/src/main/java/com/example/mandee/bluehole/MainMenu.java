@@ -11,19 +11,11 @@ import android.view.View;
 
 public class MainMenu extends ActionBarActivity {
 
-
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main_menu);
-
     }
-
-
-
-
-
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
@@ -37,15 +29,11 @@ public class MainMenu extends ActionBarActivity {
         // automatically handle clicks on the Home/Up button, so long
         // as you specify a parent activity in AndroidManifest.xml.
 
-
         return super.onOptionsItemSelected(item);
     }
 
     public void startGame(View view) {
         Intent intent = new Intent(this, BlueHoleMain.class);
         startActivity(intent);
-    }
-
-    public void restartGame(View view) {
     }
 }
