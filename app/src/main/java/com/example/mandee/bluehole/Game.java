@@ -331,7 +331,7 @@ public class Game {
 
     private void checkIncreaseSpeed() {
         int score = Integer.parseInt(getScore());
-        if(score / 10 >= ballIncreaseSpeed) {
+        if(score / 2 >= ballIncreaseSpeed) {
             System.out.println("INCREASED");
             for (int i = 0; i < listOfBadBalls.size(); ++i) {
                 listOfBadBalls.get(i).increaseXDis(1);
