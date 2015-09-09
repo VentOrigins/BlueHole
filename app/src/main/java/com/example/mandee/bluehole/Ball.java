@@ -46,6 +46,7 @@ public class Ball {
         this.blueHole = blueHole;
 
         this.wallBounces = 0;
+
         // Chooses color of the ball
         Random rand = new Random();
 
@@ -99,6 +100,7 @@ public class Ball {
         }
         ballImage.setX((float)(ballImage.getX() + getDx()));
         ballImage.setY((float)(ballImage.getY() + getDy()));
+
     }
 
     /*  =============================================================================
@@ -193,14 +195,6 @@ public class Ball {
         return 30;
     }
 
-    public float getCenterX() {
-        return ballImage.getX() + 30;
-    }
-
-    public float getCenterY() {
-        return ballImage.getY() + 30;
-    }
-
     public int getWallBounces() {
         return wallBounces;
     }
@@ -211,5 +205,14 @@ public class Ball {
     public void changeToBlack() {
         ballImage.setBackgroundResource(R.drawable.voblackball);
         ballImage.setTag("Black");
+    }
+
+
+    public float getCenterX() {
+        return ballImage.getX() + 30;
+    }
+
+    public float getCenterY() {
+        return ballImage.getY() + 30;
     }
 }

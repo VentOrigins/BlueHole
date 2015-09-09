@@ -169,6 +169,7 @@ public class Game {
 //            setBallSpawnSpeed(4000);
 //            moreBalls++;
 //        }
+
     }
 
     /*  =============================================================================
@@ -222,6 +223,7 @@ public class Game {
             listOfBadBalls.add(ball);
         }
     }
+
 
     /*  =============================================================================
     Removes a black ball
