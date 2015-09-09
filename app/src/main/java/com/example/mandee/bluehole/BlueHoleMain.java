@@ -31,6 +31,7 @@ public class BlueHoleMain extends ActionBarActivity {
     private boolean ifPaused = false;
     private Game game;
     private boolean ifFirstTimeRunning = true;
+    private boolean ifGameRunning = false;
 
     private TextView textBar;
     private TextView scoreBar;
@@ -39,6 +40,7 @@ public class BlueHoleMain extends ActionBarActivity {
     private Runnable ballSpawn;
     private Runnable ballRender;
     private Runnable gameOver;
+    private Runnable bluePortalSpawn;
 
     // Used for SharedPreferences to store the score
     private Context thisContext;
@@ -177,7 +179,10 @@ public class BlueHoleMain extends ActionBarActivity {
         ImageView imageViewBH = (ImageView) findViewById(R.id.bluehole);
         float bhWidth = TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 30, r.getDisplayMetrics());
         float bhHeight = TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 30, r.getDisplayMetrics());
+        imageViewBH.setScaleX(1.0f);
+        imageViewBH.setScaleY(1.0f);
         this.blueHole = new BlueHole(imageViewBH, bhWidth, bhHeight);
+
     }
 
     /*  =============================================================================
@@ -193,7 +198,7 @@ public class BlueHoleMain extends ActionBarActivity {
             @Override
             public boolean onTouch(View v, MotionEvent event) {
                 // When game is over, do not move the portal
-                if (game.isGameOver()) {
+                if (game.isGameOver() || ifGameRunning == false) {
                     return false;
                 }
                 // Sets the boundaries in where the screen can be tapped
@@ -281,8 +286,10 @@ public class BlueHoleMain extends ActionBarActivity {
         ballRender  = new Runnable() {
             public void run() {
                 if (!ifPaused && !game.isGameOver()) {
+                    ifGameRunning = true;
                     game.render();
                     if(game.isGameOver()) {
+                        ifGameRunning = false;
                         gameOver();
                     }
                     h.postDelayed(this, game.getBallMovementSpeed());

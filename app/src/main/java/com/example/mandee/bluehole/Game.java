@@ -282,6 +282,9 @@ public class Game {
         textBar.setVisibility(View.VISIBLE);
         textBar.setText("Game Over");
         isGameOver = true;
+        // Scales the portal image size back to the original size
+        blueHole.getImage().setScaleX(1.0f);
+        blueHole.getImage().setScaleY(1.0f);
     }
 
     /*  =============================================================================
@@ -346,6 +349,10 @@ public class Game {
 
     public int getBallMovementSpeed() {
         return ballMovementSpeed;
+    }
+
+    public BlueHole getBlueHole() {
+        return blueHole;
     }
 
     private void setBallSpawnSpeed(int spawnSpeed) {
