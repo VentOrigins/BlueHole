@@ -26,14 +26,12 @@ public class BlueHoleMain extends ActionBarActivity {
     private Resources r;
     private RelativeLayout gameLayout;
     private RelativeLayout rlayout;
-    private ImageView nextBall;
 
     private boolean ifPaused = false;
     private Game game;
     private boolean ifFirstTimeRunning = true;
     private TextView textBar;
     private TextView scoreBar;
-    private ImageView ballImage;
 
     private Runnable ballSpawn;
     private Runnable ballRender;
@@ -85,8 +83,6 @@ public class BlueHoleMain extends ActionBarActivity {
     }
 
     public void createBlueHole() {
-        nextBall = (ImageView) findViewById(R.id.nextBall);
-        nextBall.setTag("Red");
         gameLayout = (RelativeLayout) findViewById(R.id.gameLayout);
         rlayout = (RelativeLayout) findViewById(R.id.rlayout);
         ImageView imageViewBH = (ImageView) findViewById(R.id.bluehole);
@@ -136,10 +132,9 @@ public class BlueHoleMain extends ActionBarActivity {
 
         textBar = (TextView) findViewById(R.id.textBar);
         scoreBar = (TextView) findViewById(R.id.scoreBar);
-        ballImage = new ImageView(BlueHoleMain.this);
 
         // Initializes the game
-        final Game game = new Game(top, bottom, left, right, blueHole, nextBall, textBar, scoreBar, rlayout, this);
+        final Game game = new Game(top, bottom, left, right, blueHole, textBar, scoreBar, rlayout, this);
 
         return game;
     }

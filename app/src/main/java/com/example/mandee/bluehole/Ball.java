@@ -66,7 +66,7 @@ public class Ball {
         }
 
 
-        LinearLayout.LayoutParams parms = new LinearLayout.LayoutParams(30, 30);
+        LinearLayout.LayoutParams parms = new LinearLayout.LayoutParams(60, 60);
         ballImage.setLayoutParams(parms);
         ballImage.requestLayout();
         ballImage.setX(x);
@@ -77,13 +77,13 @@ public class Ball {
 
     public void render(float top, float bottom, float left, float right) {
 
-        if (ballImage.getX() + getDx() < left || ballImage.getX() + getDx() + 30 > right) {
+        if (ballImage.getX() + getDx() < left || ballImage.getX() + getDx() + 60 > right) {
             setDx(-getDx());
         }
         if (getDy() < 0 && ballImage.getY() + getDy() < top) {
             setDy(-getDy());
         }
-        if (getDy() > 0 && ballImage.getY() + getDy() + 40 > bottom) {
+        if (getDy() > 0 && ballImage.getY() + getDy() + 60 > bottom) {
             setDy(-getDy());
         }
         ballImage.setX((ballImage.getX() + getDx()));
@@ -108,8 +108,28 @@ public class Ball {
         this.dy = dy;
     }
 
+    public void increaseXDis(int increaseX) {
+        if(this.dx < 0) {
+            this.dx -= increaseX;
+        }
+        else {
+            this.dx += increaseX;
+        }
+         System.out.println(this.dx);
+    }
+
+    public void increaseYDis(int increaseY) {
+        if(this.dy < 0) {
+            this.dy -= increaseY;
+        }
+        else {
+            this.dy += increaseY;
+        }
+        System.out.println(this.dy);
+    }
+
     public float getRadius() {
-        return 15;
+        return 30;
     }
 
     public float getTop() {
@@ -129,11 +149,11 @@ public class Ball {
     }
 
     public float getCenterX() {
-        return ballImage.getX() + 15;
+        return ballImage.getX() + 30;
     }
 
     public float getCenterY() {
-        return ballImage.getY() + 15;
+        return ballImage.getY() + 30;
     }
 
     //Return true if collison happens

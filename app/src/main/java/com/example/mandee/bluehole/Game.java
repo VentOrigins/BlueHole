@@ -1,6 +1,7 @@
 package com.example.mandee.bluehole;
 
 import android.app.Activity;
+import android.view.View;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
@@ -25,8 +26,6 @@ public class Game {
 
     // Blue Portal
     private BlueHole blueHole;
-    //Next Ball
-    private ImageView nextBall;
     //Text Bar
     private TextView textBar;
     //Score bar
@@ -49,10 +48,9 @@ public class Game {
     //Increase number of balls spawned
     private int moreBalls;
     //For checking when score is modulus of 8
-    private int ballCheck;
+    private int ballIncreaseSpeed;
 
-
-    public Game(float top, float bottom, float left, float right, BlueHole blueHole, ImageView nextBall, TextView textBar, TextView scoreBar, RelativeLayout rlayout, Activity mainActivity) {
+    public Game(float top, float bottom, float left, float right, BlueHole blueHole, TextView textBar, TextView scoreBar, RelativeLayout rlayout, Activity mainActivity) {
         // bluePortal = new BluePortal();
         this.listOfGoodBalls = new ArrayList<Ball>();
         this.listOfBadBalls = new ArrayList<Ball>();
@@ -62,18 +60,23 @@ public class Game {
         this.screenRight = right;
 
         this.blueHole = blueHole;
-        this.nextBall = nextBall;
 
         this.rlayout = rlayout;
         this.mainActivity = mainActivity;
 
         this.textBar = textBar;
         this.scoreBar = scoreBar;
+
+
         ballSpawnSpeed = 4000;
         ballMovementSpeed = 10;
         spawnCheck = 1;
         moreBalls = 1;
-        ballCheck = 1;
+
+
+        ballIncreaseSpeed = 1;
+
+
         rand = new Random();
         changeBall();
     }
@@ -102,31 +105,18 @@ public class Game {
 
             ball.removeView();
             listOfGoodBalls.remove(ball);
-            if(ball.checkCollision().equals(nextBall.getTag())) {
-                removeBlackBall();
-                increaseScore(2);
+            increaseScore(1);
+            checkIncreaseSpeed();
 
-            } else {
-                addBlackToBallList(false);
-                increaseScore(1);
-            }
-            changeBall();
         }
 
         else {
             ball.render(screenTop, screenBottom, screenLeft, screenRight);
             if(ball.checkCollision() != null) {
-
                 ball.removeView();
                 listOfGoodBalls.remove(ball);
-                if(ball.checkCollision().equals(nextBall.getTag())) {
-                    increaseScore(2);
-                    removeBlackBall();
-                } else {
-                    increaseScore(1);
-                    addBlackToBallList(false);
-                }
-                changeBall();
+                increaseScore(1);
+                checkIncreaseSpeed();
             }
 
         }
@@ -149,14 +139,13 @@ public class Game {
 
 
         int score = Integer.parseInt(getScore());
-        if(score / 5 > spawnCheck){
+        if(score / 3 > spawnCheck){
             setBallSpawnSpeed(getBallSpawnSpeed()- 1000);
             spawnCheck++;
         }
 
         if(getBallSpawnSpeed() < 2000) {
             setBallSpawnSpeed(4000);
-            ballCheck++;
             moreBalls++;
         }
 
@@ -171,7 +160,7 @@ public class Game {
 
 
 
-            int changeOfBallPosX = rand.nextInt(21) - 10;
+            int changeOfBallPosX = rand.nextInt(11) - 10;
             int changeOfBallPosY = rand.nextInt(11) + 5;
 
 
@@ -191,23 +180,10 @@ public class Game {
         int xChange = 10;
         int yChange = 8;
         int score = Integer.parseInt(getScore());
-        if(score < 15) {
-            times = 1;
-        }
-        else if(score < 30) {
-            times = 2;
-        }
-        else if(score < 45) {
-            times = 3;
-        }
-        else if(score > 45) {
-            times = 4;
-        }
-
         for(int i = 0; i < times; i++) {
             ImageView ballImage = new ImageView(mainActivity);
-            int changeOfBallPosX = rand.nextInt(xChange) - (xChange+5);
-            int changeOfBallPosY = rand.nextInt(yChange) + 5;
+            int changeOfBallPosX = rand.nextInt(xChange) - (5);
+            int changeOfBallPosY = rand.nextInt(yChange) + (5);
             int startingBallPosX = rand.nextInt( Math.round(screenRight - screenLeft) - 100) + Math.round(screenLeft - 5);
             int startingBallPosY = Math.round(screenTop - 2);
 
@@ -218,50 +194,50 @@ public class Game {
 
     }
 
+//
+//    private void removeBlackBall() {
+//
+//
+//        if(listOfBadBalls.size() > 0) {
+//            listOfBadBalls.get(0).removeView();
+//            listOfBadBalls.remove(0);
+//        }
+//
+//
+//    }
 
-    private void removeBlackBall() {
-
-
-        if(listOfBadBalls.size() > 0) {
-            listOfBadBalls.get(0).removeView();
-            listOfBadBalls.remove(0);
-        }
-
-
-    }
-
-
-    public float getTop() {
-        return screenTop;
-    }
-
-    public float getBottom() {
-        return screenBottom;
-    }
-
-    public float getLeft() {
-        return screenLeft;
-    }
-
-    public float getRight() {
-
-        return screenRight;
-    }
+//
+//    public float getTop() {
+//        return screenTop;
+//    }
+//
+//    public float getBottom() {
+//        return screenBottom;
+//    }
+//
+//    public float getLeft() {
+//        return screenLeft;
+//    }
+//
+//    public float getRight() {
+//
+//        return screenRight;
+//    }
 
     private void changeBall() {
-        int color = rand.nextInt(3);
-        if (color == 0) {
-            nextBall.setImageResource(R.drawable.voredball);
-            nextBall.setTag("Red");
-        }
-        else if (color == 1) {
-            nextBall.setImageResource(R.drawable.voblueball);
-            nextBall.setTag("Blue");
-        }
-        else if (color == 2) {
-            nextBall.setImageResource(R.drawable.vogreenball);
-            nextBall.setTag("Green");
-        }
+//        int color = rand.nextInt(3);
+//        if (color == 0) {
+//            nextBall.setImageResource(R.drawable.voredball);
+//            nextBall.setTag("Red");
+//        }
+//        else if (color == 1) {
+//            nextBall.setImageResource(R.drawable.voblueball);
+//            nextBall.setTag("Blue");
+//        }
+//        else if (color == 2) {
+//            nextBall.setImageResource(R.drawable.vogreenball);
+//            nextBall.setTag("Green");
+//        }
 
     }
     private void increaseScore(int increase) {
@@ -272,7 +248,7 @@ public class Game {
 
     private void gameOver() {
 
-        nextBall.setImageDrawable(null);
+        textBar.setVisibility(View.VISIBLE);
         textBar.setText("Game Over");
         isGameOver = true;
 
@@ -310,7 +286,7 @@ public class Game {
         changeBall();
         score = 0;
 
-        textBar.setText("Golden Ball: ");
+        textBar.setVisibility(View.INVISIBLE);
         scoreBar.setText("Score: 0");
 
         isGameOver = false;
@@ -349,7 +325,20 @@ public class Game {
         ballMovementSpeed = 10;
         spawnCheck = 1;
         moreBalls = 1;
-        ballCheck = 1;
+        ballIncreaseSpeed = 1;
+
+    }
+
+    private void checkIncreaseSpeed() {
+        int score = Integer.parseInt(getScore());
+        if(score / 10 >= ballIncreaseSpeed) {
+            System.out.println("INCREASED");
+            for (int i = 0; i < listOfBadBalls.size(); ++i) {
+                listOfBadBalls.get(i).increaseXDis(1);
+                listOfBadBalls.get(i).increaseYDis(2);
+            }
+            ballIncreaseSpeed++;
+        }
 
     }
 

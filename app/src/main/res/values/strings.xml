@@ -5,4 +5,5 @@
     <string name="action_settings">Settings</string>
     <string name="restart">Tutorial</string>
     <string name="start">Start Game</string>
+    <string name="blueHole">Blue Hole</string>
 </resources>
