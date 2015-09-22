@@ -20,20 +20,11 @@
             android:layout_marginLeft="25dp"
             android:id="@+id/scoreBar"
             android:text="Score: 0"
-            android:textSize="20dp"
+            android:textSize="20sp"
             android:textColor="#FFFFFF"
             android:layout_centerVertical="true"
             android:layout_centerHorizontal="true"
             />
-        <com.google.android.gms.ads.AdView
-            android:id="@+id/adView"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_centerHorizontal="true"
-            android:layout_alignParentBottom="true"
-            ads:adSize="BANNER"
-            ads:adUnitId="@string/banner_ad_unit_id">
-        </com.google.android.gms.ads.AdView>
 
     </RelativeLayout>
 
@@ -49,6 +40,7 @@
         android:paddingLeft="16dp"
         android:paddingRight="16dp">
 
+
     </RelativeLayout>
 
     <TextView
@@ -60,7 +52,7 @@
         android:textAlignment="center"
         android:gravity="center"
         android:text=""
-        android:textSize="20dp"
+        android:textSize="20sp"
         android:textColor="#FFFFFF"
         android:layout_centerHorizontal="true"
         android:layout_centerVertical="true"
@@ -76,7 +68,7 @@
         android:layout_below="@+id/textBar"
         android:id="@+id/highScore"
         android:text=""
-        android:textSize="20dp"
+        android:textSize="20sp"
         android:textAlignment="center"
         android:gravity="center"
         android:textColor="#FFFFFF"
@@ -85,24 +77,17 @@
         />
     <Button
         android:layout_width="100dp"
-        android:layout_height="100dp"
+        android:layout_height="50dp"
         android:layout_centerHorizontal="true"
         android:layout_marginTop="20dp"
         android:layout_below="@+id/highScore"
         android:id="@+id/restartButton"
-        android:text="Restart"
+        android:background="@drawable/borderbutton"
+        android:textColor="#000000"
+        android:text="@string/restart"
         android:visibility="invisible"
         android:onClick="restartGame"/>
-    <Button
-        android:layout_width="100dp"
-        android:layout_height="100dp"
-        android:layout_centerHorizontal="true"
-        android:layout_marginTop="20dp"
-        android:layout_below="@+id/restartButton"
-        android:id="@+id/mainMenuButton"
-        android:text="Menu"
-        android:visibility="invisible"
-        android:onClick="mainMenu"/>
+
 
     <ImageView
         android:layout_width="35dp"
@@ -112,5 +97,15 @@
         android:layout_centerHorizontal="true"
         android:layout_centerVertical="true"
         />
+    <com.google.android.gms.ads.AdView
+        android:id="@+id/adView"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        ads:adSize="BANNER"
+        ads:adUnitId="@string/banner_ad_unit_id"
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true">
+    </com.google.android.gms.ads.AdView>
 
  </RelativeLayout>

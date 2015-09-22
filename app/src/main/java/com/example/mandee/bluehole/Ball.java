@@ -2,7 +2,6 @@ package com.example.mandee.bluehole;
 
 import android.content.res.Resources;
 import android.graphics.Color;
-import android.graphics.drawable.Drawable;
 import android.os.Handler;
 import android.widget.ImageView;
 import android.widget.LinearLayout;

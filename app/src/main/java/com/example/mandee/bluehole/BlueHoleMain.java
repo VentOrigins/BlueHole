@@ -1,7 +1,6 @@
 package com.example.mandee.bluehole;
 
 import android.content.Context;
-import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.res.Resources;
 import android.os.Handler;
@@ -31,7 +30,6 @@ public class BlueHoleMain extends ActionBarActivity {
     private boolean ifPaused = false;
     private Game game;
     private boolean ifFirstTimeRunning = true;
-    private boolean ifGameRunning = false;
 
     private TextView textBar;
     private TextView scoreBar;
@@ -40,7 +38,6 @@ public class BlueHoleMain extends ActionBarActivity {
     private Runnable ballSpawn;
     private Runnable ballRender;
     private Runnable gameOver;
-    private Runnable bluePortalSpawn;
 
     // Used for SharedPreferences to store the score
     private Context thisContext;
@@ -82,7 +79,9 @@ public class BlueHoleMain extends ActionBarActivity {
         super.onPause();
         // Sets pause to be true
         ifPaused = true;
-
+        if(game != null) {
+            game.pauseGame();
+        }
         // Pauses the ball spawning and rendering
         // When game is opened up to the foreground again, onWindowFocusChanged recreates
         // the runnables
@@ -108,6 +107,10 @@ public class BlueHoleMain extends ActionBarActivity {
         super.onResume();
         //Sets pause to be false
         ifPaused = false;
+        if(game!= null) {
+            game.resumeGame();
+        }
+
 
         // When the game is resumed and it is in the game over mode, resumes the ad
         if (adView != null) {
@@ -139,16 +142,14 @@ public class BlueHoleMain extends ActionBarActivity {
 
             //Functions that initializes everything from the app
             createBlueHole();
-            onBlueHoleTouch();
             game = gameInit();
-            blackBallSpawn();
-            createRunnables();
+            onBlueHoleTouch();
+
         }
         // If the game is not in its game over state, recreates the ball runnables
-        if(!game.isGameOver()) {
-            ballSpawnTick(2000);
-            ballRenderTick(2000);
-        }
+//        if(!game.isGameOver()) {
+//
+//        }
     }
 
     /*  =============================================================================
@@ -198,8 +199,15 @@ public class BlueHoleMain extends ActionBarActivity {
             @Override
             public boolean onTouch(View v, MotionEvent event) {
                 // When game is over, do not move the portal
-                if (game.isGameOver() || ifGameRunning == false) {
+                if (game.isGameOver()) {
                     return false;
+                }
+                if(game.isPaused()) {
+                    blackBallSpawn();
+                    createRunnables();
+                    ballSpawnTick(0);
+                    ballRenderTick(0);
+                    game.resumeGame();
                 }
                 // Sets the boundaries in where the screen can be tapped
                 float px = TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 16, r.getDisplayMetrics());
@@ -260,7 +268,7 @@ public class BlueHoleMain extends ActionBarActivity {
     @return     none
     ========================================================================== */
     private void blackBallSpawn() {
-        for(int i = 0; i < 1; i++) {
+        for(int i = 0; i < 3; i++) {
             game.addBlackToBallList(true);
         }
     }
@@ -286,10 +294,8 @@ public class BlueHoleMain extends ActionBarActivity {
         ballRender  = new Runnable() {
             public void run() {
                 if (!ifPaused && !game.isGameOver()) {
-                    ifGameRunning = true;
                     game.render();
                     if(game.isGameOver()) {
-                        ifGameRunning = false;
                         gameOver();
                     }
                     h.postDelayed(this, game.getBallMovementSpeed());
@@ -314,14 +320,11 @@ public class BlueHoleMain extends ActionBarActivity {
                 // Displays the game over views
                 TextView highScore = (TextView) findViewById(R.id.highScore);
                 Button restart = (Button) findViewById(R.id.restartButton);
-                Button mainMenu = (Button) findViewById(R.id.mainMenuButton);
 
                 highScore.setVisibility(View.VISIBLE);
                 highScore.bringToFront();
                 restart.setVisibility(View.VISIBLE);
                 restart.bringToFront();
-                mainMenu.setVisibility(View.VISIBLE);
-                mainMenu.bringToFront();
 
                 highScore.setText("High Score: " + Integer.toString(score));
             }
@@ -379,19 +382,18 @@ public class BlueHoleMain extends ActionBarActivity {
     public void restartGame(View view) {
         // Restarts the game class with the default values
         game.restart();
+        game.pauseGame();
 
         // Changes the view of the game, removing the game over views
         TextView highScore = (TextView) findViewById(R.id.highScore);
         Button restart = (Button) findViewById(R.id.restartButton);
-        Button mainMenu = (Button) findViewById(R.id.mainMenuButton);
         highScore.setVisibility(View.INVISIBLE);
         restart.setVisibility(View.INVISIBLE);
-        mainMenu.setVisibility(View.INVISIBLE);
 
         //Restarts the ball spawning and ticks
-        blackBallSpawn();
-        ballSpawnTick(2000);
-        ballRenderTick(2000);
+//        blackBallSpawn();
+//        ballSpawnTick(2000);
+//        ballRenderTick(2000);
 
         // Restart the blue hole
         blueHole.reset();
@@ -412,9 +414,7 @@ public class BlueHoleMain extends ActionBarActivity {
         // The game class ends
         game.endGame();
 
-        // Start the activity of the main menu
-        Intent intent = new Intent(this, MainMenu.class);
-        startActivity(intent);
+
     }
 
     @Override

@@ -57,6 +57,8 @@ public class Game {
     //For checking when score is modulus of 8
     private int ballIncreaseSpeed;
 
+    private boolean isPaused;
+
     public Game(float top, float bottom, float left, float right, BlueHole blueHole, TextView textBar, TextView scoreBar, RelativeLayout rlayout, Activity mainActivity) {
         this.screenTop = top;
         this.screenBottom = bottom;
@@ -82,6 +84,8 @@ public class Game {
         this.spawnNum = 2;
 
         ballIncreaseSpeed = 1;
+
+        this.isPaused = true;
 
         rand = new Random();
     }
@@ -123,7 +127,7 @@ public class Game {
 
         }
         //If ball collided with wall 4 times
-        if(ball.getWallBounces() == 4) {
+        if(ball.getWallBounces() == 6) {
             ball.changeToBlack();
             listOfGoodBalls.remove(ball);
             listOfBadBalls.add(ball);
@@ -159,9 +163,11 @@ public class Game {
     private void spawnSpeedCheck() {
         int score = Integer.parseInt(getScore());
         if(score / spawnNum >= spawnCheck){
-//            setBallSpawnSpeed(getBallSpawnSpeed()- 1000);
+            if(getBallSpawnSpeed() != 0) {
+                setBallSpawnSpeed(getBallSpawnSpeed()- 400);
+            }
             spawnCheck++;
-            moreBalls++;
+//            moreBalls++;
             spawnNum++;
         }
 
@@ -182,19 +188,24 @@ public class Game {
         // Checks the spawn speed of the balls first in retrospect to the score, which would
         //would adjust the ticks of the ball spawning
         spawnSpeedCheck();
+        int howManyBalls = rand.nextInt(3);
+        howManyBalls++;
 
         // Spawns multiple good balls with random properties depending on the score
-        for(int i = 0; i < moreBalls; i++) {
+        for(int i = 0; i < howManyBalls; i++) {
             ImageView ballImage = new ImageView(mainActivity);
-            int changeOfBallPosX = rand.nextInt(11) - 10;
-            int changeOfBallPosY = rand.nextInt(11) + 5;
+            int isNegative = rand.nextInt(2);
+            int changeOfBallPosX = rand.nextInt(10) + 5;
+            if(isNegative == 0) {
+                changeOfBallPosX  *= -1;
+            }
+            int changeOfBallPosY = rand.nextInt(10) + 5;
             int startingBallPosX = rand.nextInt( Math.round(screenRight - screenLeft) - 100) + Math.round(screenLeft - 5);
             int startingBallPosY = Math.round(screenTop - 2);
 
             // Adds the ball to the good ball list
             Ball ball = new Ball(startingBallPosX, startingBallPosY, changeOfBallPosX, changeOfBallPosY, rlayout, ballImage, blueHole, false);
             listOfGoodBalls.add(ball);
-
         }
     }
 
@@ -247,11 +258,11 @@ public class Game {
     private void changeBall() {
         int color = rand.nextInt(3);
         if (color == 0) {
-            nextBall.setImageResource(R.drawable.voredball);
+            nextBall.setImageResource(R.drawable.oldredball);
             nextBall.setTag("Red");
         }
         else if (color == 1) {
-            nextBall.setImageResource(R.drawable.voblueball);
+            nextBall.setImageResource(R.drawable.oldblueball);
             nextBall.setTag("Blue");
         }
         else if (color == 2) {
@@ -337,6 +348,18 @@ public class Game {
 
     public boolean isGameOver() {
         return isGameOver;
+    }
+
+    public boolean isPaused() {
+        return isPaused;
+    }
+
+    public void pauseGame() {
+        isPaused = true;
+    }
+
+    public void resumeGame() {
+        isPaused = false;
     }
 
     public String getScore() {
